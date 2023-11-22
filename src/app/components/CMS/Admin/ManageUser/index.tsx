@@ -37,30 +37,6 @@ import React, {
 } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 
-interface UserRequest {
-  key: React.Key;
-  index: number;
-  full_name?: string;
-  hashed_data?: string;
-  updated_at?: string;
-  avatar?: string;
-  birthday?: string;
-  phone?: string;
-  hashed_password?: string;
-  email?: string;
-  verify_code?: string;
-  address_wallet?: null;
-  system_role?: string;
-  is_active?: true;
-  confirm_status?: string;
-  username?: string;
-  private_key?: string;
-  survey_data?: any;
-  id: string;
-  address_real?: string;
-  created_at?: string;
-}
-
 export default memo(function ManageUser() {
   const [currentTable, setCurrentTable] = useState('all');
   const [skip, setSkip] = useState(0);
@@ -208,26 +184,15 @@ export default memo(function ManageUser() {
                             ? 'Sure to block this user ?'
                             : 'Sure to open this user ?'
                         }`}
-                        // onConfirm={() => fetchCreateMarket(record.id)}
                       >
-                        {/* <Popover
-                          placement={'left'}
-                          title={
-                            record.system_role === 'PUBLISH'
-                              ? 'Block tài khoản này'
-                              : 'Mở khóa tài khoản này'
-                          }
-                        > */}
                         <Space>
                           {record.system_role === 'PUBLISH' ? (
                             <FontAwesomeIcon
-                              //   onClick={() => fetchUpdateProductStatus(record.id, 'PRIVATE')}
                               icon={faLockOpen}
                               style={{ color: '#27913c' }}
                             />
                           ) : (
                             <FontAwesomeIcon
-                              //   onClick={() => fetchUpdateProductStatus(record.id, 'PUBLISH')}
                               icon={faLock}
                               style={{ color: '#a87171' }}
                             />
@@ -245,10 +210,6 @@ export default memo(function ManageUser() {
                   {
                     key: 3,
                     label: (
-                      // <Popover
-                      //   placement={'left'}
-                      //   title="Nhắn tin cho người dùng"
-                      // >
                       <Space>
                         <FontAwesomeIcon
                           icon={faEnvelope}
@@ -256,17 +217,12 @@ export default memo(function ManageUser() {
                         />
                         <p>Nhắn tin cho người dùng</p>
                       </Space>
-                      // </Popover>
                     ),
                   },
                   {
                     key: 4,
                     label: (
-                      <Popconfirm
-                        title="Sure to delete?"
-                        // onConfirm={() => fetchDeleteProduct(record.id)}
-                      >
-                        {/* <Popover placement={'left'} title="Xóa người dùng"> */}
+                      <Popconfirm title="Sure to delete?">
                         <Space>
                           <FontAwesomeIcon
                             icon={faCircleXmark}
@@ -274,7 +230,6 @@ export default memo(function ManageUser() {
                           />
                           <p>Xóa người dùng</p>
                         </Space>
-                        {/* </Popover> */}
                       </Popconfirm>
                     ),
                   },
@@ -297,7 +252,6 @@ export default memo(function ManageUser() {
         }?skip=${skip}&limit=${limit}`
       )
       .then((res) => {
-        // console.log(res.data.data);
         const newList: UserRequest[] = [...res.data.data.list_users].map(
           (item, index) => ({
             key: skip * limit + index + 1,
@@ -316,8 +270,6 @@ export default memo(function ManageUser() {
     fetchUser();
   }, [fetchUser]);
 
-  // useSWR('user/list_users_request', fetchUserRequest);
-  // useSWR('user/list', fetchAllUser);
   const handleChangeTable = async (e: any) => {
     setSkip(0);
     setCurrentTable(e.toString());
