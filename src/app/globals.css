@@ -2,10 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
+
+@layer base {
+  html {
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  }
+}
+.ant-btn:not([disabled]) {
+  background:#42bb67 ;
+  color: rgb(255, 255, 255);
+}
+.ant-btn:not([disabled]):hover {
+  font-weight: bold;
+  color:#48b89f
+}
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --background: white;
+  --foreground: black;
+}
+[data-theme='dark'] {
+  --background: rgba(33, 33, 33, 0.723);
+  --foreground: white;
+}
+.react-horizontal-scrolling-menu--scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+.react-horizontal-scrolling-menu--scroll-container {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(208, 208, 208); 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(86, 190, 167); 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(52, 132, 114); 
 }
 
 @media (prefers-color-scheme: dark) {
@@ -15,13 +65,30 @@
     --background-end-rgb: 0, 0, 0;
   }
 }
+.mainpage{
+  background-image: url("../../public/Durian.jpg") !important;
+  background-size:cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+*{
+  box-sizing: border-box;
+}
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
+  
+  color: rgb(46, 46, 46);
+  /* font-family: 'Roboto', sans-serif; */
+  /* color: rgb(var(--foreground-rgb)); */
+  /* background: linear-gradient(
       to bottom,
       transparent,
       rgb(var(--background-end-rgb))
     )
-    rgb(var(--background-start-rgb));
+    rgb(var(--background-start-rgb)); */
+    
+}
+button:active{
+  transform: scale(0.9);
 }
