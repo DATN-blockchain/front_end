@@ -12,7 +12,7 @@ export default function Owner(props: UserType) {
         width={113}
         preview={false}
         height={113}
-        src={props.avatar}
+        src={props.avatar || staticVariables.noImage.src}
         className="object-cover mt-8 rounded-full border-4 border-slate-50 z-10 group-hover:scale-150 group-hover:-translate-x-24  group-hover:-translate-y-20 transition-all duration-500"
       />
       <div className="z-10 group-hover:-translate-y-10 transition-all duration-500">

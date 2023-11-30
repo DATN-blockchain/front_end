@@ -1,0 +1,20 @@
+{
+    "Index": {
+      "title": "Hello world!"
+    },
+    "header": {
+      "route":{
+        "home":"Home",
+        "history":"History",
+        "about":"About Us"
+      }
+    },
+    "action":{
+      "deleted":"deleted by",
+      "updated":"updated by",
+      "created":"created by"
+    },
+    "notification":{
+      "PRODUCT_NOTIFICATION":"The product"
+    }
+}

@@ -8,6 +8,7 @@ import staticVariables from '@/static';
 import { PlusOutlined, UserOutlined } from '@ant-design/icons';
 import { faSquareFacebook } from '@fortawesome/free-brands-svg-icons';
 import {
+  faCakeCandles,
   faEnvelope,
   faLocationDot,
   faPenToSquare,
@@ -129,7 +130,7 @@ export default function GeneralInformation() {
               icon={<UserOutlined />}
               alt=""
               size={300}
-              src={currentUser.avatar}
+              src={currentUser.avatar || staticVariables.noImage.src}
             />
             <Upload
               accept="image/png, image/jpeg, image/jpg"
@@ -152,10 +153,12 @@ export default function GeneralInformation() {
                 queryType={'user'}
                 name="full_name"
                 classNameLabel="text-2xl font-bold"
-                initialValue={currentUser.full_name || ''}
+                initialValue={
+                  currentUser.full_name || currentUser.username || ''
+                }
               />
               <Tag className="w-fit" color="success">
-                Fammer
+                {currentUser.system_role}
               </Tag>
             </div>
             <Row className="w-full flex items-center">
@@ -172,7 +175,9 @@ export default function GeneralInformation() {
                   APIurl={'user/update_me'}
                   queryType={'user'}
                   name="as"
-                  initialValue="14-Khuy My  - NHS - DN"
+                  initialValue={
+                    currentUser.address_real || 'Chưa được cập nhật'
+                  }
                 />
               </Col>
             </Row>
@@ -181,7 +186,7 @@ export default function GeneralInformation() {
                 <FontAwesomeIcon
                   className="mr-[10px]"
                   size={'2xl'}
-                  icon={faLocationDot}
+                  icon={faCakeCandles}
                   style={{ color: '#2754b0' }}
                 />
               </Col>
@@ -207,7 +212,7 @@ export default function GeneralInformation() {
                 />
               </Col>
               <Col>
-                <p>12313213</p>
+                <p>{currentUser.account_balance} VNT</p>
               </Col>
             </Row>
           </div>
@@ -226,7 +231,7 @@ export default function GeneralInformation() {
                   APIurl={'user/update_me'}
                   queryType={'user'}
                   name="as"
-                  initialValue="http/asd/asdd"
+                  initialValue="https://fb.com/"
                 />
               </Col>
             </Row>
@@ -244,7 +249,7 @@ export default function GeneralInformation() {
                   APIurl={'user/update_me'}
                   queryType={'user'}
                   name="as"
-                  initialValue="adbc@gmail.com"
+                  initialValue={currentUser.email || 'Email chưa được cập nhật'}
                 />
               </Col>
             </Row>
@@ -260,7 +265,7 @@ export default function GeneralInformation() {
               <Col>
                 <InputCustom
                   name="as"
-                  initialValue="012313132"
+                  initialValue={currentUser.phone || 'SĐT chưa được cập nhật'}
                   APIurl={'user/update_me'}
                   queryType={'user'}
                 />
@@ -336,7 +341,7 @@ export default function GeneralInformation() {
           <Typography.Title level={4}>Giới thiệu bản thân</Typography.Title>
           <TextAreaCustom
             name="description"
-            initialValue="asdasdasdasdadadasda"
+            initialValue=""
             APIurl={'user/update_me'}
             queryType={'user'}
           />

@@ -82,7 +82,10 @@ export default function NotificationItem(props: NotificationItemType) {
           {/* </Popconfirm> */}
         </ConfigProvider>
       )}
-      <Avatar size={'large'} src={props.user?.avatar} />
+      <Avatar
+        size={'large'}
+        src={props.user?.avatar || staticVariables.noImage.src}
+      />
       <div className="w-9/12">
         <div
           onClick={async () => {

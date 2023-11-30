@@ -61,23 +61,6 @@ export default function LeaderBoard(props: Props) {
               <p className="text-[16px] text-right pl-[20px] truncate">{`${item.total_quantity} SP`}</p>
             </Tooltip>
           </Col>
-          <Col span={14}>
-            <div className="flex items-center gap-x-5">
-              <div className="w-fit">
-                <Image
-                  preview={false}
-                  className="object-cover rounded-xl border-[1px]"
-                  alt=""
-                  width={70}
-                  height={70}
-                  src={item.Product?.banner}
-                />
-              </div>
-              <p className="text-[16px] leading-6 pr-[50px] truncate">
-                {item.Product?.name}
-              </p>
-            </div>
-          </Col>
         </Row>
       ))}
     </div>

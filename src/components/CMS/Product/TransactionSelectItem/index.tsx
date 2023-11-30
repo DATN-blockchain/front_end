@@ -18,22 +18,52 @@ export default function TransactionSelectItem(props: PropsType) {
   const [showButton, setShowButton] = useState(false);
   return (
     <div
-      onMouseOver={() => setShowButton(true)}
-      onMouseOut={() => setShowButton(false)}
-      className="flex w-full flex-col p-[20px] transition-all	ease-in duration-300"
+      // onMouseOver={() => setShowButton(true)}
+      // onMouseOut={() => setShowButton(false)}
+      className="flex relative w-full group border-b-[1px] flex-col p-[20px] rounded-xl transition-all duration-500 transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:transform-none"
     >
       <div className="flex gap-x-5">
         <Image
-          className="object-cover rounded"
+          className="object-cover rounded-full"
           alt=""
-          width={100}
-          height={100}
+          preview={false}
+          width={40}
+          height={40}
           src={props.image}
         />
-        <div className="flex flex-col w-10/12 border-[1px] rounded">
-          <p className="text-center text-xl font-medium	">{props.productName}</p>
-          <div className="flex justify-around">
-            <ConfigProvider
+        <div className="flex w-10/12 gap-x-3 rounded">
+          <div className="w-[100px] flex flex-col">
+            <p className="text-[14px] text-[#505050]">Tên sản phẩm</p>
+            <p className="truncate font-semibold text-[12px] text-[#9B9B9B] pr-[10px]">
+              {props.productName}
+            </p>
+          </div>
+          <div className="w-[100px] flex flex-col">
+            <p className="text-[14px] text-[#505050]">Chủ sản phẩm</p>
+            <p className="truncate font-semibold text-[12px] text-[#9B9B9B] pr-[10px]">
+              {props.owner}
+            </p>
+          </div>
+          <div className="w-[70px] flex flex-col">
+            <p className="text-[14px] text-[#505050]">Số lượng</p>
+            <p className="truncate font-semibold text-[12px] text-[#9B9B9B] pr-[10px]">
+              {props.buyQuantity}
+            </p>
+          </div>
+          <div className="w-[50px] flex flex-col">
+            <p className="text-[14px] text-[#505050]">Giá</p>
+            <p className="truncate font-semibold text-[12px] text-[#9B9B9B] pr-[10px]">
+              {props.priceTotal}
+            </p>
+          </div>
+          <div className="w-[100px] flex flex-col">
+            <p className="text-[14px] text-[#505050]">Ngày mua</p>
+            <p className="truncate font-semibold text-[12px] text-[#9B9B9B] pr-[10px]">
+              {moment(props.buyDay).format('DD/MM/YYYY')}
+            </p>
+          </div>
+          {/* <div className="flex justify-around"> */}
+          {/* <ConfigProvider
               theme={{
                 components: {
                   Statistic: {
@@ -50,18 +80,16 @@ export default function TransactionSelectItem(props: PropsType) {
                 title="Ngày mua"
                 value={moment(props.buyDay).format('L')}
               />
-            </ConfigProvider>
-          </div>
+            </ConfigProvider> */}
+          {/* </div> */}
         </div>
       </div>
-      {showButton && (
-        <Button
-          onClick={() => props.onFinish?.(props.transactionId)}
-          className="m-auto mt-[10px] w-2/3 "
-        >
-          Chọn
-        </Button>
-      )}
+      <button
+        onClick={() => props.onFinish?.(props.transactionId)}
+        className=" w-fit px-[20px] py-[5px] rounded text-white font-semibold absolute bg-[#337AEE] top-1/2 right-0 -translate-y-1/2"
+      >
+        Chọn
+      </button>
     </div>
   );
 }

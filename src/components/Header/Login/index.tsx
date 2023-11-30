@@ -2,8 +2,11 @@
 import instanceAxios from '@/api/instanceAxios';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import { nextEvent } from '@/reducers/nextEventSlice';
+import { setshowFormLogin } from '@/reducers/showFormSlice';
 import { initialUser, setLogin } from '@/reducers/userSlice';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { faArrowRight, faDiagramNext } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Form, Input, notification } from 'antd';
 import { setCookie } from 'cookies-next';
 import { title } from 'process';
@@ -27,10 +30,11 @@ export default function Login({ onFinish }: { onFinish: () => void }) {
     await instanceAxios
       .post('auth/login', data)
       .then((res) => {
+        onFinish();
+        dispatch(setshowFormLogin({ showFormLogin: false }));
         dispatch(
           setLogin({ logged: true, user: res.data.data.user as UserType })
         );
-        onFinish();
         setCookie('access_token', res.data.data.access_token);
         instanceAxios.defaults.headers.common.Authorization = `Bearer ${res.data.data.access_token}`;
         notification.success({
@@ -71,15 +75,15 @@ export default function Login({ onFinish }: { onFinish: () => void }) {
   // };
   return (
     <div>
-      <p className="my-[30px] text-3xl font-normal block text-center">
+      <p className="my-[30px] text-[32px] font-normal block text-center">
         Đăng nhập
       </p>
-      <Form
+      <Form layout="vertical"
         form={form}
         name="normal_login"
-        className="login-form"
+        className="login-form px-[20px]"
         labelCol={{ span: 6 }}
-        wrapperCol={{ span: 16 }}
+        // wrapperCol={{ span: 16 }}
         // style={{ maxWidth: 600 }}
         initialValues={{ remember: true }}
         onFinish={fethLogin}
@@ -87,7 +91,7 @@ export default function Login({ onFinish }: { onFinish: () => void }) {
         autoComplete="off"
       >
         <Form.Item<FieldType>
-          label="Username"
+          label="Email"
           name="email"
           rules={[{ required: true, message: 'Please input your username!' }]}
         >
@@ -95,7 +99,7 @@ export default function Login({ onFinish }: { onFinish: () => void }) {
             // style={{
             //   boxShadow: `rgba(133, 189, 215, 0.8784313725) 0px 12px 10px -8px`,
             // }}
-            className="shadow-[0px_12px_10px_-8px_rgba(133,189,215,0.8784313725)]"
+            className="shadow-[0px_12px_10px_-8px_rgba(133,189,215,0.8784313725)] h-10 text-[18px]"
             prefix={<UserOutlined className="site-form-item-icon" />}
           />
         </Form.Item>
@@ -106,20 +110,30 @@ export default function Login({ onFinish }: { onFinish: () => void }) {
           rules={[{ required: true, message: 'Please input your password!' }]}
         >
           <Input.Password
-            className="shadow-[0px_12px_10px_-8px_rgba(133,189,215,0.8784313725)]"
+            className="shadow-[0px_12px_10px_-8px_rgba(133,189,215,0.8784313725)] h-10 text-[18px]"
             prefix={<LockOutlined className="site-form-item-icon" />}
           />
         </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 10, span: 16 }}>
-          <Button
-            onClick={() => {}}
-            className="mt-[30px] bg-[#1677ff]"
-            type="primary"
-            htmlType="submit"
+        <Form.Item>
+          <button
+            // onClick={() => {}}
+            // className=""
+            // type="primary"
+            className="overflow-hidden w-full px-[20px] h-12 block m-auto mt-[20px] bg-[#6dd297] text-white border-none rounded-xl text-lg font-bold cursor-pointer relative z-10 group"
+            // htmlType="submit"
+            type="submit"
           >
-            Submit
-          </Button>
+            {/* <button  > */}
+            Đăng nhập
+            <span className="absolute w-full h-32 -top-8 -left-2 bg-green-200 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-500 duration-1000 origin-bottom"></span>
+            <span className="absolute w-full h-32 -top-8 -left-2 bg-green-300 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-700 duration-700 origin-bottom"></span>
+            <span className="absolute w-full h-32 -top-8 -left-2 bg-green-500 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-1000 duration-500 origin-bottom"></span>
+            <p className="text-white group-hover:opacity-100 group-hover:duration-1000 duration-100 opacity-0 absolute w-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+            Login <FontAwesomeIcon icon={faArrowRight} width={"40px"} style={{color: "white",}} />
+            </p>
+            {/* </button> */}
+          </button>
         </Form.Item>
       </Form>
     </div>

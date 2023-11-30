@@ -27,15 +27,10 @@ export default function RoleSelect({
   }, [onFinishSelectRule, value]);
   const listRuleDescription = [
     {
-      rules: 'Nông dân',
-      value: 'FARMER',
+      rules: 'Seed company',
+      value: 'SEEDLING_COMPANY',
       image: staticVariables.qc5.src,
-      decription: `Nông dân là những người lao động cư trú ở nông thôn, tham gia sản xuất
-      nông nghiệp. Nông dân sống chủ yếu bằng ruộng vườn, sau đó đến các
-      ngành nghề mà tư liệu sản xuất chính là đất đai. Tùy từng quốc gia,
-      từng thời kì lịch sử, người nông dân có quyền sở hữu khác nhau về
-      ruộng đất. Họ hình thành nên giai cấp nông dân, có vị trí, vai trò
-      nhất định trong xã hội.`,
+      decription: 'asdasdasd',
       detail: [
         {
           label: 'Xem mô tả',
@@ -58,10 +53,15 @@ export default function RoleSelect({
       ],
     },
     {
-      rules: 'Seed company',
-      value: 'SEEDLING_COMPANY',
+      rules: 'Nông dân',
+      value: 'FARMER',
       image: staticVariables.qc5.src,
-      decription: 'asdasdasd',
+      decription: `Nông dân là những người lao động cư trú ở nông thôn, tham gia sản xuất
+      nông nghiệp. Nông dân sống chủ yếu bằng ruộng vườn, sau đó đến các
+      ngành nghề mà tư liệu sản xuất chính là đất đai. Tùy từng quốc gia,
+      từng thời kì lịch sử, người nông dân có quyền sở hữu khác nhau về
+      ruộng đất. Họ hình thành nên giai cấp nông dân, có vị trí, vai trò
+      nhất định trong xã hội.`,
       detail: [
         {
           label: 'Xem mô tả',

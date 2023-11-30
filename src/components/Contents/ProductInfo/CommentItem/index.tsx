@@ -18,7 +18,10 @@ export default function CommentItem(props: CommentItemType & Props) {
           content={
             <div className="flex flex-col space-y-5">
               <div className="flex space-x-5">
-                <Avatar size={100} src={props.user?.avatar} />
+                <Avatar
+                  size={100}
+                  src={props.user?.avatar || staticVariables.noImage.src}
+                />
                 <div className="flex flex-col space-y-1">
                   <p className="text-[20px] font-bold">
                     {props.user?.username}
@@ -60,7 +63,7 @@ export default function CommentItem(props: CommentItemType & Props) {
           }
         >
           <div className="flex flex-col items-center">
-            <Avatar src={props.user?.avatar} />
+            <Avatar src={props.user?.avatar || staticVariables.noImage.src} />
           </div>
         </Popover>
         <div className="flex ml-[10px] p-[8px] flex-col rounded-bl-[10px] rounded-r-[10px] bg-[#f0f2f5] ">
