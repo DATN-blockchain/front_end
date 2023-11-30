@@ -55,7 +55,7 @@ import {
   faCartShopping,
   faEarthAsia,
   faHouse,
-  faUser,
+  // faUser,
   faUserGear,
   faWallet,
 } from '@fortawesome/free-solid-svg-icons';
@@ -65,18 +65,20 @@ import instanceAxios from '@/api/instanceAxios';
 import { setshowFormLogin } from '@/reducers/showFormSlice';
 import ForgetForm from './Register/ForgetForm';
 import { Inter } from 'next/font/google';
-import { faBell } from '@fortawesome/free-regular-svg-icons';
+import { faBell, faUser } from '@fortawesome/free-regular-svg-icons';
 import NotificationItem from './NotificationItem';
 import moment from 'moment';
 import 'moment/locale/vi';
 import currency from '@/services/currency';
 import CartItem from './CartItem';
+import { CheckoutForm } from '../Contents/common/CheckoutForm';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default memo(function Header() {
   // const [user, setUser] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   const [valueRadioCart, setValueRadioCart] = useState(0);
   const [showCartModal, setShowCartModal] = useState(false);
   const [showSearchItems, setShowSearchItems] = useState(false);
@@ -92,7 +94,7 @@ export default memo(function Header() {
   const [listNotifications, setListNotifications] = useState<
     NotificationItemType[]
   >([]);
-  // const [listUnreadNotifications, setListUnreadNotifications] = useState(0);
+  const [listUnreadNotifications, setListUnreadNotifications] = useState(0);
   // const [totalNotifications, setTotalNotifications] = useState(0);
   const debouncedValue = useDebounce<string>(valueSearch, 300);
   const { mutate } = useSWRConfig();
@@ -109,7 +111,7 @@ export default memo(function Header() {
   moment.locale(locale);
 
   const onChange = (e: RadioChangeEvent) => {
-    console.log('radio checked', e.target.value);
+    // console.log('radio checked', e.target.value);
     setValueRadioCart(e.target.value);
   };
 
@@ -155,7 +157,7 @@ export default memo(function Header() {
       .get(`notifications/list`)
       .then((res) => {
         setListNotifications(res.data.data);
-        // setListUnreadNotifications(res.data.data.meta.unread_total);
+        setListUnreadNotifications(res.data.meta.unread_total);
         // setTotalNotifications(res.data.data.meta.total);
       })
       .catch((err) => console.log(err));
@@ -263,7 +265,10 @@ export default memo(function Header() {
     {
       label: (
         <Link href={`/user/${currentUser.id}`}>
-          <Space wrap={false}>
+          <Space
+            className="py-[10px] font-medium text-[16px] space-x-3 px-[5px] rounded-xl"
+            wrap={false}
+          >
             <FontAwesomeIcon icon={faUser} style={{ color: '#3c64aa' }} />
             <p>Thông tin</p>
           </Space>
@@ -302,37 +307,43 @@ export default memo(function Header() {
     // },
     {
       label: (
-        <Space wrap={false}>
-          <FontAwesomeIcon icon={faWallet} />
+        <Space
+          className="py-[10px] font-medium text-[16px] px-[5px] space-x-3 rounded-xl"
+          wrap={false}
+        >
+          <FontAwesomeIcon icon={faWallet} style={{ color: '#4096ff' }} />
           <p>{`${currentUser.account_balance} ${currency}`}</p>
         </Space>
       ),
       key: '1',
     },
-    {
-      label: (
-        <ConfigProvider
-          theme={{
-            token: {
-              lineWidth: 3,
-              paddingXS: 10,
-            },
-          }}
-        >
-          <Space wrap={false} onClick={() => setShowCartModal(true)}>
-            <Badge count={listCart.length} offset={[-30, 8]} color="blue">
-              <FontAwesomeIcon icon={faCartShopping} />
-            </Badge>
-            <p>Giỏ hàng</p>
-          </Space>
-        </ConfigProvider>
-      ),
-      key: '2',
-    },
+    // {
+    //   label: (
+    //     <ConfigProvider
+    //       theme={{
+    //         token: {
+    //           lineWidth: 3,
+    //           paddingXS: 10,
+    //         },
+    //       }}
+    //     >
+    //       <Space wrap={false} onClick={() => setShowCartModal(true)}>
+    //         <Badge count={listCart.length} offset={[-30, 8]} color="blue">
+    //           <FontAwesomeIcon icon={faCartShopping} />
+    //         </Badge>
+    //         <p>Giỏ hàng</p>
+    //       </Space>
+    //     </ConfigProvider>
+    //   ),
+    //   key: '2',
+    // },
     {
       label: (
         <Link href={'/cms'}>
-          <Space wrap={false}>
+          <Space
+            className="py-[10px] font-medium text-[16px] px-[5px] space-x-3 rounded-xl"
+            wrap={false}
+          >
             <FontAwesomeIcon icon={faUserGear} style={{ color: '#376ecd' }} />
             <p>Quản lí</p>
           </Space>
@@ -343,8 +354,14 @@ export default memo(function Header() {
     {
       label:
         currentUser.system_role === 'MEMBER' ? (
-          <Link href={'/register-rule'}>
-            <Space wrap={false}>
+          <Link
+            // className="py-[10px] px-[5px] font-medium text-[16px] space-x-3 rounded-xl"
+            href={'/register-rule'}
+          >
+            <Space
+              className="py-[10px] font-medium text-[16px] px-[5px] space-x-3 rounded-xl"
+              wrap={false}
+            >
               <FontAwesomeIcon icon={faUser} />
               <p>Đăng kí thành viên</p>
             </Space>
@@ -360,15 +377,16 @@ export default memo(function Header() {
     {
       label: (
         <div onClick={handleLogout}>
-          <Row gutter={[16, 0]} wrap={false} justify={'start'}>
-            <Col span={6}>
-              <FontAwesomeIcon
-                className="mr-[10px]"
-                icon={faArrowRightFromBracket}
-              />
-            </Col>
-            <Col span={24}>Logout</Col>
-          </Row>
+          <Space
+            className="py-[10px] font-medium text-[16px] px-[5px] space-x-3 rounded-xl"
+            wrap={false}
+          >
+            <FontAwesomeIcon
+              // className="mr-[10px]"
+              icon={faArrowRightFromBracket}
+            />
+            <p>Logout</p>
+          </Space>
         </div>
       ),
       key: '5',
@@ -407,10 +425,9 @@ export default memo(function Header() {
       </div>
       <div className="relative w-1/4">
         <Popover
+          getPopupContainer={(trigger) => trigger.parentNode as HTMLElement}
           title={
-            <p className=" w-full truncate">
-              {`Kết quả tìm kiếm: ${debouncedValue}`}
-            </p>
+            <p className=" w-full truncate">{`Kết quả tìm kiếm: ${debouncedValue}`}</p>
           }
           className="w-full"
           content={
@@ -497,15 +514,16 @@ export default memo(function Header() {
         {logged ? (
           <div className="flex items-center space-x-5">
             <Popover
+              getPopupContainer={(trigger) => trigger.parentNode as HTMLElement}
               title="Thông báo của bạn"
               placement={'bottomLeft'}
               trigger={['click']}
               content={contentNotifications}
             >
               <div className="bg-[#1212120A] hover:bg-[#ececec] px-[20px] py-[10px] rounded-lg">
-                {listNotifications.length ? (
+                {listUnreadNotifications ? (
                   <Badge
-                    count={listNotifications.length}
+                    count={listUnreadNotifications}
                     offset={[16, -8]}
                     color="blue"
                   >
@@ -521,7 +539,12 @@ export default memo(function Header() {
                 )}
               </div>
             </Popover>
-            <Dropdown menu={{ items }}>
+
+            <Dropdown
+              getPopupContainer={(trigger) => trigger.parentNode as HTMLElement}
+              menu={{ items }}
+              placement={'bottom'}
+            >
               {/* {listUnreadNotifications ? (
                 <Badge
                   count={listUnreadNotifications}
@@ -531,9 +554,31 @@ export default memo(function Header() {
                   <Avatar src={currentUser.avatar} size="large" />
                 </Badge>
               ) : ( */}
-              <Avatar src={currentUser.avatar} size="large" />
+              <div className="bg-[#1212120A] hover:bg-[#ececec]  px-[20px] py-[10px] rounded-lg">
+                {/* <Avatar src={currentUser.avatar} size={20} /> */}
+                <FontAwesomeIcon icon={faUser} style={{ color: '#000000' }} />
+              </div>
               {/* )} */}
             </Dropdown>
+            <ConfigProvider
+              theme={{
+                token: {
+                  // lineWidth: 3,
+                  // paddingXS: 10,
+                },
+              }}
+            >
+              <Space
+                className="bg-[#1212120A] hover:bg-[#ececec]  px-[20px] py-[10px] rounded-lg"
+                wrap={false}
+                onClick={() => setShowCartModal(true)}
+              >
+                <Badge count={listCart.length} offset={[16, -8]} color="blue">
+                  <FontAwesomeIcon icon={faCartShopping} />
+                </Badge>
+                {/* <p>Giỏ hàng</p> */}
+              </Space>
+            </ConfigProvider>
             <Modal
               style={{ float: 'right', margin: '10px' }}
               onCancel={() => setShowCartModal(false)}
@@ -589,14 +634,37 @@ export default memo(function Header() {
                       </p>
                     </div>
                   </div>
+                  {/* Button Checkout */}
                   <div className="w-full">
                     <button
                       // disabled
-                      onClick={fetchBuyCartItem}
+                      // onClick={fetchBuyCartItem}
+                      onClick={() => setShowCheckoutModal(true)}
                       className="relative disabled:bg-gray-100 disabled:text-gray-300 block m-auto py-2 px-8 text-black text-base font-bold bg-green-100 rounded-xl overflow-hidden transition-all duration-400 ease-in-out shadow-md hover:scale-105 hover:text-white hover:shadow-lg active:scale-90 before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r before:from-blue-500 before:to-blue-300 before:transition-all before:duration-500 before:ease-in-out before:z-[-1] before:rounded-xl hover:before:left-0"
                     >
                       Buy now
                     </button>
+                    <Modal
+                      open={showCheckoutModal}
+                      onCancel={() => setShowCheckoutModal(false)}
+                      footer={[]}
+                    >
+                      <CheckoutForm
+                        buyQuantity={listCart[valueRadioCart]?.quantity || 0}
+                        producId={listCart[valueRadioCart]?.product?.id || ''}
+                        price={listCart[valueRadioCart]?.product?.price || 0}
+                        quantity={
+                          listCart[valueRadioCart]?.product?.quantity || 0
+                        }
+                        cartId={listCart[valueRadioCart]?.id}
+                        onSuccess={() => {
+                          mutate(`marketplace/id`);
+                        }}
+                        receiver={''}
+                        phone={''}
+                        address={''}
+                      />
+                    </Modal>
                   </div>
                 </div>
               </div>
@@ -610,34 +678,51 @@ export default memo(function Header() {
             Đăng nhập
           </div>
         )}
-        <Modal
-          open={showModal}
-          // width={currentForm === 'REGISTER' ? 1000 : 520}
-          centered
-          onCancel={() => {
-            setShowModal(false);
-            dispatch(setshowFormLogin({ showFormLogin: false }));
+        <ConfigProvider
+          theme={{
+            token: {
+              colorBgElevated: 'rgba(255, 255, 255, 0.75)',
+            },
           }}
-          footer={[]}
         >
-          {currentForm === 'LOGIN' && <Login onFinish={handleShowModal} />}
-          {currentForm === 'REGISTER' && (
-            <Register onFinishOTP={onFinishOTP} onFinish={handleShowModal} />
-          )}
-          {currentForm === 'FORGET' && <ForgetForm onFinishOTP={onFinishOTP} />}
-          <div className=" m-auto flex justify-around	max-w-[300px]">
-            <p onClick={() => setCurrentForm('FORGET')}>Forget?</p>
-            <p
-              onClick={() =>
-                currentForm === 'LOGIN'
-                  ? setCurrentForm('REGISTER')
-                  : setCurrentForm('LOGIN')
-              }
-            >
-              {currentForm === 'LOGIN' ? 'Register' : 'Login'}
-            </p>
-          </div>
-        </Modal>
+          <Modal
+            open={showModal}
+            // width={currentForm === 'REGISTER' ? 1000 : 520}
+            className="rounded-3xl backdrop-blur-sm"
+            centered
+            onCancel={() => {
+              setShowModal(false);
+              dispatch(setshowFormLogin({ showFormLogin: false }));
+            }}
+            footer={[]}
+          >
+            {currentForm === 'LOGIN' && <Login onFinish={handleShowModal} />}
+            {currentForm === 'REGISTER' && (
+              <Register onFinishOTP={onFinishOTP} onFinish={handleShowModal} />
+            )}
+            {currentForm === 'FORGET' && (
+              <ForgetForm onFinishOTP={onFinishOTP} />
+            )}
+            <div className=" m-auto flex justify-around	max-w-[300px]">
+              <a
+                className="text-[16px]"
+                onClick={() => setCurrentForm('FORGET')}
+              >
+                Forget?
+              </a>
+              <a
+                className="text-[16px]"
+                onClick={() =>
+                  currentForm === 'LOGIN'
+                    ? setCurrentForm('REGISTER')
+                    : setCurrentForm('LOGIN')
+                }
+              >
+                {currentForm === 'LOGIN' ? 'Register' : 'Login'}
+              </a>
+            </div>
+          </Modal>
+        </ConfigProvider>
       </div>
     </div>
   );

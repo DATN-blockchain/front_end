@@ -20,7 +20,10 @@ export default function SearchItem({
         {...parent}
         className={`flex gap-x-5 items-center ${parent.className} `}
       >
-        <Avatar size={50} src={data.product?.banner} />
+        <Avatar
+          size={50}
+          src={data.product?.banner || staticVariables.noImage.src}
+        />
         <div>
           <p className="text-lg font-medium">{data.product?.name}</p>
           <div className="flex gap-x-2">

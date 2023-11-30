@@ -60,7 +60,10 @@ export default function ProductOrigin(props: Props) {
           <Avatar
             className="mt-[50px]"
             size={150}
-            src={props.transactions?.product?.user?.avatar}
+            src={
+              props.transactions?.product?.user?.avatar ||
+              staticVariables.noImage.src
+            }
           />
           <p className="text-xl text-[#262626] p-[10px]">
             {props.transactions?.product?.user?.username}

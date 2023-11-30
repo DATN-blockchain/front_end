@@ -1,6 +1,7 @@
 import instanceAxios from '@/api/instanceAxios';
 import { useAppSelector } from '@/hooks';
 import useLogin from '@/services/requireLogin';
+import staticVariables from '@/static';
 import { SendOutlined } from '@ant-design/icons';
 import { Avatar, Input, message } from 'antd';
 import { useState } from 'react';
@@ -36,7 +37,11 @@ export default function CommentInput({
   return (
     <div className={`flex items-center mt-[20px] ${className}`}>
       <div>
-        <Avatar className="mr-[10px]" size="large" src={currentUser.avatar} />
+        <Avatar
+          className="mr-[10px]"
+          size="large"
+          src={currentUser.avatar || staticVariables.noImage.src}
+        />
       </div>
       <Input.TextArea
         autoSize

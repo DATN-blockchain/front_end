@@ -23,6 +23,9 @@ export const CheckoutForm = ({
   quantity,
   buyQuantity = 0,
   cartId,
+  receiver,
+  phone,
+  address,
   onSuccess,
 }: {
   form?: FormProps;
@@ -31,6 +34,9 @@ export const CheckoutForm = ({
   buyQuantity: number;
   price: number;
   quantity: number;
+  receiver: string;
+  phone: string;
+  address: string;
   onSuccess?: () => void;
 }) => {
   const [priceTotal, setPriceTotal] = useState(buyQuantity * price);
@@ -51,7 +57,7 @@ export const CheckoutForm = ({
     // console.log(e);
     await instanceAxios
       .put(
-        `product/${producId}/purchase?price=${priceTotal}&quantity=${valueQuantity}${
+        `product/${producId}/purchase?price=${priceTotal}&quantity=${valueQuantity}&receiver=${receiver}&phone_number=${phone}&address=${address}${
           cartId ? `&cart_id=${cartId}` : ``
         }`
       )
@@ -126,7 +132,7 @@ export const CheckoutForm = ({
       </Form.Item>
       <Form.Item
         label="Tên người nhận"
-        name={'username'}
+        name={'receiver'}
         initialValue={currentUser.username}
         rules={[
           {
@@ -165,42 +171,16 @@ export const CheckoutForm = ({
 
       <Form.Item className="w-full">
         <div className="w-full flex justify-around items-center">
-          {/* <button
-            type="submit"
-            onClick={() => setOrderType('CART')}
-            className="rounded-lg transition relative w-36 h-10 overflow-hidden cursor-pointer flex items-center border border-green-500 bg-green-500 group hover:bg-green-500 active:bg-green-500 active:border-green-500"
-          >
-            <span className="text-white font-semibold ml-8 transform group-hover:translate-x-20 transition-all duration-300">
-              Add Cart
-            </span>
-            <span className="absolute right-0 h-full w-10 rounded-lg bg-green-500 flex items-center justify-center transform group-hover:translate-x-0 group-hover:w-full transition-all duration-300">
-              <svg
-                className="svg w-8 text-white"
-                fill="none"
-                height="24"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <line x1="12" x2="12" y1="5" y2="19"></line>
-                <line x1="5" x2="19" y1="12" y2="12"></line>
-              </svg>
-            </span>
-          </button> */}
-          <button
+          <Button
             // onClick={() => setOrderType('BUY')}
             className="rounded-lg font-semibold transition relative text-white w-36 h-10 overflow-hidden cursor-pointer text-center border border-green-500 bg-green-500 group hover:bg-green-500 active:bg-green-500 active:border-green-500"
             disabled={!!!quantity || loading}
-            type="submit"
-            // loading={loading}
-            // htmlType="submit"
+            // type="submit"
+            loading={loading}
+            htmlType="submit"
           >
             Xác nhận
-          </button>
+          </Button>
         </div>
       </Form.Item>
     </Form>

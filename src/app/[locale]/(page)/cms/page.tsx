@@ -21,6 +21,8 @@ import ManageUser from '@/components/CMS/Admin/ManageUser';
 import ManageProduct from '@/components/CMS/Admin/ManageProduct';
 import Statistical from '@/components/CMS/Statistical';
 import { useEffectOnce } from 'usehooks-ts';
+import TransactionStatus from '@/components/CMS/TransactionStatus';
+import Deposit from '@/components/CMS/Deposit';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -56,12 +58,13 @@ export default memo(function CMSPage() {
     getItem('Thông tin của bạn', 'sub1', <UserOutlined />, [
       getItem(<p>Thông tin chung</p>, '2'),
       getItem(<p>Đổi mật khẩu</p>, '3'),
-      getItem(<p>Liên kết</p>, '4'),
+      getItem(<p>Nạp tiền</p>, '4'),
     ]),
     currentUser.user.system_role !== 'ADMIN'
       ? getItem('Sản phẩm', 'sub2', <TeamOutlined />, [
           getItem(<p>Quản lí sản phâm</p>, '5'),
           getItem(<p>Lịch sử giao dịch</p>, '6'),
+          getItem(<p>Xác nhận đơn hàng</p>, '7'),
         ])
       : null,
     // getItem('Files'
@@ -69,7 +72,7 @@ export default memo(function CMSPage() {
     currentUser.user.system_role === 'ADMIN'
       ? getItem('Admin', 'sub3', <TeamOutlined />, [
           // getItem('Thống kê hệ thống', '6'),
-          getItem(<p>Quản lí user</p>, '7'),
+          getItem(<p>Quản lí user</p>, '8'),
           // getItem('Quản lí sản phẩm', '8'),
         ])
       : null,
@@ -79,14 +82,14 @@ export default memo(function CMSPage() {
     <Statistical key={1} />,
     <GeneralInformation key={2} />,
     <ChangPassword className="w-2/5 m-auto" key={3} />,
-    <></>,
-    <ProductCMS key={4} />,
-    <TransactionCMS key={5} />,
-
+    <Deposit key={4} />,
+    <ProductCMS key={5} />,
+    <TransactionCMS key={6} />,
+    <TransactionStatus key={7} />,
     currentUser.user.system_role === 'ADMIN'
       ? [
           // <div key={6}>asa</div>,
-          <ManageUser key={6} />,
+          <ManageUser key={8} />,
           // <ManageProduct key={8} />,
         ]
       : null,

@@ -1,6 +1,7 @@
 'use client';
 import staticVariables from '@/static';
 import {
+  CheckCircleTwoTone,
   DeleteTwoTone,
   EditTwoTone,
   EllipsisOutlined,
@@ -76,6 +77,7 @@ import {
   faCircleCheck,
   faEnvelope,
   faMobileScreenButton,
+  faUpRightFromSquare,
 } from '@fortawesome/free-solid-svg-icons';
 import GrowUpItem from '@/components/Contents/ProductInfo/GrowUpItem';
 import Paragraph from 'antd/es/typography/Paragraph';
@@ -134,6 +136,7 @@ export default function MarketInfo({
   const currentUser = useAppSelector((state) => state.user.user);
   const { mutate } = useSWRConfig();
   const { login } = useLogin();
+  console.log('list transaction:', dataListTransaction);
 
   ChartJS.register(
     CategoryScale,
@@ -369,10 +372,21 @@ export default function MarketInfo({
       render: (value, record, index) =>
         moment(record.created_at).format('DD/MM/YYYY'),
     },
-    // {
-    //   title: 'Status',
-    //   render: (value, record, index) => moment(record.).format('DD/MM/YYYY'),
-    // },
+    {
+      title: 'Mã giao dịch',
+      dataIndex: 'tx_hash',
+      render: (value, record, index) => (
+        <a
+          href={`https://goerli.arbiscan.io/tx/${record.tx_hash}`}
+          target="_blank"
+        >
+          <FontAwesomeIcon
+            icon={faUpRightFromSquare}
+            style={{ color: '#000' }}
+          />
+        </a>
+      ),
+    },
   ];
 
   const onUpload = (e: UploadChangeParam<UploadFile<any>>) => {
@@ -426,21 +440,6 @@ export default function MarketInfo({
                     'Chủ sản phẩm vẫn chưa thêm mô tả gì?????'}
                 </div>
 
-                {/* <p className="text-[27px] text-[#2DB457] font-[Work Sans] font-[600]">
-              $ {dataProduct.price?.toLocaleString()}
-            </p> */}
-
-                {/* <div className="flex gap-x-4 my-[20px]">
-                  {[...Array(4)].map((_, index) => (
-                    <div
-                      key={index}
-                      className="w-fit items-center py-[10px] px-[20px] bg-lime-50 rounded border-[1px] border-[#1f5145]"
-                    >
-                      <EyeOutlined className="mr-[5px]" />
-                      12313
-                    </div>
-                  ))}
-                </div> */}
                 <div className="select-none	rounded-xl w-full mt-[20px] border-[1px] border-gray-300">
                   <div className="flex items-center space-x-4 border-b-[1px] p-[20px]">
                     <FieldTimeOutlined className="text-[20px]" />
@@ -450,16 +449,24 @@ export default function MarketInfo({
                     </p>
                   </div>
                   <div className="p-[20px]">
-                    <div>
-                      <p>Giá sản phẩm</p>
-                      <p className="text-[30px] tracking-widest	  font-[600]">
-                        {`${dataProduct.price || 0} ${currency}`}
-                      </p>
+                    <div className="flex items-center space-x-20">
+                      <div className="items-center">
+                        <p>Giá sản phẩm</p>
+                        <p className="text-[30px] tracking-widest font-[600]">
+                          {`${dataProduct.price || 0} ${currency}`}
+                        </p>
+                      </div>
+                      <div className="items-center">
+                        <p>Sản phẩm hiện còn</p>
+                        <p className="text-[30px] tracking-widest font-[600]">
+                          {`${dataProduct.quantity || 0}`}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex items-center space-x-2 py-[10px] font-medium text-gray-600">
-                      <p>{`Sản phẩm hiện còn:`}</p>
+                      <p>{`Tổng số lượng ghé thăm:`}</p>
                       <p className="font-bold  text-[20px]">
-                        {dataProduct.quantity || 0}
+                        {dataProduct.view || 0}
                       </p>
                     </div>
                     <div className="flex items-center space-x-10">
@@ -500,6 +507,19 @@ export default function MarketInfo({
                           className="text-[20px] text-blue-700"
                         />
                       </Space>
+                      <div className="flex space-x-1">
+                        <p
+                          onClick={() =>
+                            setBuyQuantity(dataProduct.quantity || 0)
+                          }
+                          className="px-[15px] text-white py-[5px] bg-[#2081e1] rounded-xl"
+                        >
+                          Mua tất cả
+                        </p>
+                        {dataProduct.quantity === buyQuantity && (
+                          <CheckCircleTwoTone className="text-[18px]" />
+                        )}
+                      </div>
                       <p>
                         Tổng phí là: {buyQuantity * (dataProduct.price || 0)}{' '}
                         {currency}
@@ -545,7 +565,11 @@ export default function MarketInfo({
                         onSuccess={() => {
                           setShowModalPay(false);
                           mutate(`marketplace/id`);
+                          mutate(`user/me`);
                         }}
+                        receiver={''}
+                        phone={''}
+                        address={''}
                       />
                     </Modal>
                   </div>
@@ -553,48 +577,9 @@ export default function MarketInfo({
               </div>
             </div>
 
-            {/* <Segmented
-              size={'large'}
-              className={'mt-[50px]'}
-              options={[
-                { label: 'Thông tin chung', value: 'GENERAL' },
-                { label: 'Nhà cung cấp', value: 'PROVIDER' },
-              ]}
-              onChange={(e) => setGeneralAndProvider(e as string)}
-            /> */}
             {generalAndProvider === 'GENERAL' ? (
               <>
                 <div className="w-full flex mt-[30px] gap-x-10 ">
-                  {/* <div className="w-1/2 pt-[10px]"> */}
-                  {/* <div className="w-full flex space-x-10"> */}
-                  {/* Giới thiệu chủ sử hữu */}
-                  {/* <div className=" w-1/2 rounded-xl overflow-hidden border-[1px] border-gray-300">
-                        <div className="py-[15px] text-center font-bold border-b-[1px] border-gray-300 ">
-                          Chủ sở hữu
-                        </div>
-                        <div className="p-[20px] flex flex-col space-y-10 items-center">
-                          <Owner {...dataOwner} />
-                        </div>
-                      </div> */}
-                  {/* Thông tin sản phẩm */}
-                  {/* <div className="flex-col w-1/2 rounded-xl border-[1px] border-gray-300 overflow-auto">
-                        <div className="py-[15px] text-center font-bold border-b-[1px] border-gray-300  ">
-                          Thông tin sản phẩm
-                        </div>
-                        <div className="flex flex-col w-full px-[20px] py-[15px]">
-                          {listInformation.map((item, index) => (
-                            <div
-                              key={index}
-                              className="w-full flex justify-between items-center py-[5px]"
-                            >
-                              <p>{item.label}</p>
-                              <Paragraph copyable>{item.value}</Paragraph>
-                            </div>
-                          ))}
-                        </div>
-                      </div> */}
-                  {/* </div> */}
-                  {/* </div> */}
                   <div className="w-1/2  rounded-xl overflow-hidden border-[1px] border-gray-300">
                     <div className="flex items-center space-x-4 border-b-[1px] p-[20px]">
                       <FieldTimeOutlined className="text-[20px]" />
@@ -631,8 +616,8 @@ export default function MarketInfo({
                       <Col span={4}>
                         <p>Email</p>
                       </Col>
-                      <Col span={6}>
-                        <p>Địa chỉ ví</p>
+                      <Col span={4}>
+                        <p>Mã giao dịch</p>
                       </Col>
                     </Row>
                     <ChainItem
@@ -677,16 +662,8 @@ export default function MarketInfo({
                         Bình luận
                       </p>
                     </div>
-                    {/* <Segmented
-                      size={'large'}
-                      options={[
-                        { label: 'Bình luận', value: 'COMMENT' },
-                        { label: 'Lịch sử giao dịch', value: 'HISTORY' },
-                      ]}
-                      onChange={(e) => setChangePageRight(e as string)}
-                    /> */}
+
                     <div className="w-full ">
-                      {/* {changePageRight === 'COMMENT' && ( */}
                       <div className=" p-[20px] rounded-xl">
                         <div className="max-h-[300px]  overflow-auto">
                           {commentList.length ? (
@@ -708,9 +685,6 @@ export default function MarketInfo({
                         </div>
                         <CommentInput marketId={params.marketId} />
                       </div>
-                      {/* )} */}
-                      {/* {changePageRight === 'HISTORY' && ( */}
-                      {/* )} */}
                     </div>
                   </div>
                   <div className="w-1/2 h-fit rounded-xl border-[1px] border-gray-300">
@@ -817,85 +791,6 @@ export default function MarketInfo({
                   description="Không có dữ liệu"
                 />
               )}
-              {/* {[...Array(5)].map((_, index) => (
-            <div
-              key={index}
-              className={`relative flex ${
-                index % 2 && 'flex-row-reverse'
-              } items-center scroll-ml-6 justify-between rounded w-full pr-[50px]`}
-            >
-              <ConfigProvider
-                theme={{
-                  components: {
-                    Button: {
-                      colorPrimaryHover: '#2db457',
-                      primaryColor: '#e62929',
-                    },
-                  },
-                  token: {
-                    colorBgContainer: '#7f84d4',
-                  },
-                }}
-              >
-                {dataProduct.created_by === currentUser.id && (
-                  <Popconfirm
-                    title={'Xác nhận xóa mô tả này'}
-                    onConfirm={() => alert('OK')}
-                  >
-                    <DeleteTwoTone className="absolute top-1/2 right-0 text-2xl" />
-                  </Popconfirm>
-                )}
-              </ConfigProvider>
-              <div className="relative">
-                <Image
-                  className="object-cover w-1/2 "
-                  width={550}
-                  height={650}
-                  style={{ borderRadius: '10px' }}
-                  alt=""
-                  src={staticVariables.qc1.src}
-                />
-                {dataProduct.created_by === currentUser.id && (
-                  <Upload
-                    showUploadList={false}
-                    multiple={false}
-                    onChange={onUpload}
-                  >
-                    <EditTwoTone className="absolute top-0 right-0 translate-x-full translate-y-[-100%] text-2xl" />
-                  </Upload>
-                )}
-              </div>
-              <div className="w-1/2 px-[50px]">
-                <InputCustom
-                  className="text-4xl mb-[20px]"
-                  name={''}
-                  initialValue={'Nay chị Sốt nên lên bài hơi trễMưa'}
-                  APIurl={''}
-                  showEdit={dataProduct.created_by === currentUser.id}
-                  queryType={'user'}
-                  input={{ maxLength: 30 }}
-                />
-                <TextAreaCustom
-                  name={''}
-                  showEdit={dataProduct.created_by === currentUser.id}
-                  initialValue={`Nay chị Sốt nên lên bài hơi trễMưa quá nên ăn utng hộ c hết
-                  sớm nghĩ sớm nhaaa Có quá nhiều đơn trong 1 lúc mà chị chỉ có
-                  2 tay + trời mưa to đường trơn mà nhà c cũng không gần KTX lắm
-                  nên việc Sót đơn hoặc để các em chờ hơi lâu là một thiết sót
-                  lớn với chịCác em bao dung sự bất tiện này nhé LÊN ĐƠN KÈM SỐ
-                  PHÒNG DÙM CHỊ BÉ NHÓShip chừ tới #12h đêm giờ nào cũng có các
-                  em yên tâm nhaaaChị bé ship cả ngoài kí túc xá nên cứ mạnh dạn
-                  lên đơn Đồ ăn chị có : -SET KIMPAD ĐÙI GÀ #30k -ĐUI GÀ CHIÊN
-                  XÙ #20k -KIMPAD TRUYỀN THỐNG #15_20k -GỎI CUỐN TÔM THỊT KÈM
-                  MẮM #5k -CHÂN GÀ NHỎ-LỚN #20-35k -CÁ VIÊN CHIÊN CHẤM TƯƠNG ỚT
-                  #15_20k -CÁ VIÊN CHIÊN MẮM #20k`}
-                  APIurl={''}
-                  queryType={'product'}
-                  input={{ maxLength: 1000 }}
-                />
-              </div>
-            </div>
-          ))} */}
             </div>
           </div>
         </>

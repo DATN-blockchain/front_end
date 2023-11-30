@@ -21,6 +21,7 @@ interface TransactionType {
   quantity?: number;
   created_at?: string;
   updated_at?: string;
+  status?: string;
   product?: {
     id?: string;
     product_type?: string;
@@ -33,14 +34,9 @@ interface TransactionType {
     banner?: string;
     created_by?: string;
     created_at?: string;
-    user?: {
-      id?: string;
-      avatar?: string;
-      username?: string;
-      email?: string;
-      phone?: string;
-    };
+    user?: UserType;
   };
+  user?: UserType;
 }
 
 interface DataType {
@@ -65,18 +61,30 @@ export default function TransactionCMS() {
   const fetchDataTransaction = useCallback(async () => {
     setLoading(true);
     await instanceAxios
-      .get(`transaction_sf/list?skip=${skip - 1}&limit=${limit}`)
+      .get(
+        currentTable === 'BUY'
+          ? `transaction_sf/list?skip=${skip - 1}&limit=${limit}`
+          : `product/order_product/history_sale?skip=${skip - 1}&limit=${limit}`
+      )
       .then((res) => {
-        console.log(res.data.data.list_transaction_sf);
-        setTransactionTotal(res.data.data.total_transaction_sf);
-        const newListTransaction = [...res.data.data.list_transaction_sf].map(
-          (item, index) => ({ key: (skip - 1) * limit + index + 1, ...item })
-        );
-        setListTransaction(newListTransaction);
+        if (currentTable === 'BUY') {
+          setTransactionTotal(res.data.data.total_transaction_sf);
+          const newListTransaction = [...res.data.data.list_transaction_sf].map(
+            (item, index) => ({ key: (skip - 1) * limit + index + 1, ...item })
+          );
+          setListTransaction(newListTransaction);
+        } else {
+          console.log(res.data.data);
+          setTransactionTotal(res.data.data.total_transaction);
+          const newListTransaction = [...res.data.data.list_transaction].map(
+            (item, index) => ({ key: (skip - 1) * limit + index + 1, ...item })
+          );
+          setListTransaction(newListTransaction);
+        }
       })
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
-  }, [limit, skip]);
+  }, [currentTable, limit, skip]);
   useEffect(() => {
     fetchDataTransaction();
   }, [fetchDataTransaction]);
@@ -90,7 +98,10 @@ export default function TransactionCMS() {
     {
       title: currentTable === 'BUY' ? 'Người bán' : 'Người mua',
       dataIndex: 'product.user.username',
-      render: (value, record, index) => record.product?.user?.username,
+      render: (value, record, index) =>
+        currentTable === 'BUY'
+          ? record.product?.user?.full_name
+          : record.user?.full_name,
       width: 250,
     },
     {
@@ -105,7 +116,8 @@ export default function TransactionCMS() {
     {
       title: 'Giá đơn vị',
       dataIndex: 'price',
-      render: (value, record, index) => `${value.toLocaleString()} ${currency}`,
+      render: (value, record, index) =>
+        `${record.product?.price?.toLocaleString()} ${currency}`,
     },
     {
       title: 'Tổng giá trị',
@@ -124,10 +136,16 @@ export default function TransactionCMS() {
       title: 'Trạng thái',
       dataIndex: '',
       render: (value, record, index) =>
-        record.price || 0 % 2 ? (
+        record.status === 'DONE' ? (
           <Tag color={'success'}>Thành công</Tag>
         ) : (
-          <Tag color={'error'}>Thất bại</Tag>
+          <>
+            {record.status === 'PENDING' ? (
+              <Tag color={'warning'}>Chờ xác nhận</Tag>
+            ) : (
+              <Tag color={'error'}>Thất bại</Tag>
+            )}
+          </>
         ),
     },
   ];
