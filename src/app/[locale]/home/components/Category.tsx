@@ -8,7 +8,9 @@ import {
   CaretLeftOutlined,
   CaretRightOutlined,
 } from '@ant-design/icons';
-import { ConfigProvider, Empty, Image, Statistic } from 'antd';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ConfigProvider, Empty, Image, Statistic, Tooltip } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -139,7 +141,7 @@ export default function Category(props: Props) {
       data-aos-easing="ease-in-out"
       // className="px-[50px]"
     >
-      <p className="text-[24px] pl-[50px] font-semibold text-[#121212]">
+      <p className="text-[24px]  pl-[50px] font-semibold text-[#121212]">
         {props.title}
       </p>
       {listMarket.length ? (
@@ -154,13 +156,13 @@ export default function Category(props: Props) {
         >
           {listMarket.map((item, index) => (
             <div
-              // className="hover:text-inherit"
+              className="relative group"
               key={index}
               // href={`/market/${item.id}`}
             >
               <div
                 onClick={() => login(() => route.push(`/market/${item.id}`))}
-                className="relative w-[278px] flex flex-col mx-[10px] rounded-2xl overflow-hidden hover:shadow-lg shadow transition ease-in-out hover:-translate-y-2 duration-100 "
+                className="relative  w-[278px] flex flex-col mx-[10px] rounded-2xl overflow-hidden hover:shadow-lg shadow transition ease-in-out hover:-translate-y-2 duration-100 "
               >
                 <Image
                   width={278}
@@ -215,6 +217,13 @@ export default function Category(props: Props) {
                   </ConfigProvider>
                 </div>
               </div>
+              <Tooltip title={'Xem shop'}>
+                <FontAwesomeIcon
+                  onClick={() => route.push(`/user/${item.order_by}`)}
+                  className="absolute border-2 border-green-700 p-[10px] top-1/3 right-0 transition-all opacity-0  invisible group-hover:visible group-hover:opacity-100 duration-500 group-hover:-translate-x-10 bg-green-100 rounded-full"
+                  icon={faMagnifyingGlass}
+                />
+              </Tooltip>
             </div>
           ))}
         </ScrollMenu>

@@ -1,4 +1,5 @@
 import instanceAxios from '@/api/instanceAxios';
+import { useAppSelector } from '@/hooks';
 import staticVariables from '@/static';
 import { DeleteTwoTone } from '@ant-design/icons';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
@@ -17,6 +18,7 @@ export default function NotificationItem(props: NotificationItemType) {
   const tNotifications = useTranslations('notification');
   const tAction = useTranslations('action');
   const route = useRouter();
+  const currentUser = useAppSelector((state) => state.user.user);
   const fetchGetDetail = async () => {
     await instanceAxios
       .get(`notifications/${props.data?.data?.notification_id}/detail`)
@@ -90,17 +92,14 @@ export default function NotificationItem(props: NotificationItemType) {
         <div
           onClick={async () => {
             await fetchGetDetail();
-            route.push(
-              `/${
-                props.data?.params?.notification_type === 'PRODUCT_NOTIFICATION'
-                  ? 'product'
-                  : 'market'
-              }/${
-                props.data?.params?.notification_type === 'PRODUCT_NOTIFICATION'
-                  ? props.data?.params.product_id
-                  : props.data?.params?.marketplace_id
-              }`
-            );
+            if (props.data?.params?.action === 'commented')
+              route.push(`/market/${props.data?.params?.marketplace_id}`);
+            else {
+              if (props.data?.params?.action === 'purchase') {
+                localStorage.setItem('page', '7');
+                route.push(`/cms`);
+              }
+            }
           }}
           className="hover:text-black"
         >

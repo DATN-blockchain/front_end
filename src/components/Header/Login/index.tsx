@@ -27,6 +27,7 @@ export default function Login({ onFinish }: { onFinish: () => void }) {
   const [form] = Form.useForm();
 
   const fethLogin = async (data: object) => {
+    delete instanceAxios.defaults.headers.common.Authorization;
     await instanceAxios
       .post('auth/login', data)
       .then((res) => {
@@ -78,7 +79,8 @@ export default function Login({ onFinish }: { onFinish: () => void }) {
       <p className="my-[30px] text-[32px] font-normal block text-center">
         Đăng nhập
       </p>
-      <Form layout="vertical"
+      <Form
+        layout="vertical"
         form={form}
         name="normal_login"
         className="login-form px-[20px]"
@@ -130,7 +132,12 @@ export default function Login({ onFinish }: { onFinish: () => void }) {
             <span className="absolute w-full h-32 -top-8 -left-2 bg-green-300 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-700 duration-700 origin-bottom"></span>
             <span className="absolute w-full h-32 -top-8 -left-2 bg-green-500 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-1000 duration-500 origin-bottom"></span>
             <p className="text-white group-hover:opacity-100 group-hover:duration-1000 duration-100 opacity-0 absolute w-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-            Login <FontAwesomeIcon icon={faArrowRight} width={"40px"} style={{color: "white",}} />
+              Login{' '}
+              <FontAwesomeIcon
+                icon={faArrowRight}
+                width={'40px'}
+                style={{ color: 'white' }}
+              />
             </p>
             {/* </button> */}
           </button>

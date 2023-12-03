@@ -154,7 +154,7 @@ export default function ProductTodayItem({
           <Typography.Title className="border-b-[1px] my-[20px]" level={4}>
             Thông tin đặt hàng
           </Typography.Title>
-          <CheckoutForm producId={''} price={0} quantity={10} buyQuantity={5} receiver={''} phone={''} address={''}/>
+          <CheckoutForm producId={''} price={0} quantity={10} buyQuantity={5} receiver={''} phone={''} address={''} type_id={''}/>
         </div>
       </Modal>
       {/* </div> */}

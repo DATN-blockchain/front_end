@@ -58,6 +58,7 @@ import moment from 'moment';
 import UpdateProductForm from './UpdateProductForm';
 import CreateProductDescriptionForm from './CreateProductDescriptionForm';
 import staticVariables from '@/static';
+import GrowUpForm from '@/components/Contents/ProductInfo/GrowUpForm';
 
 // interface DataType {
 //   key: React.Key;
@@ -102,6 +103,7 @@ export default memo(function ProductCMS() {
   const [openModalCreateDescription, setOpenModalCreateDescription] =
     useState(false);
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
+  const [openModalGrowUp, setOpenModalGrowUp] = useState(false);
   const [openModalUpdateDescription, setOpenModalUpdateDescription] =
     useState(false);
   const [productId, setProductId] = useState('');
@@ -371,6 +373,28 @@ export default memo(function ProductCMS() {
                     // </Link>
                   ),
                 },
+                currentUser.system_role=="FARMER" ? {
+                  key: 6,
+                  label: (
+                    // <Link href={`/product/${record.id}`}>
+                    <>
+                      <Space
+                        onClick={() => {
+                          setProductId(record.id || '');
+                          setOpenModalGrowUp(true);
+                          setCurrentProduct(record);
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={faPenToSquare}
+                          style={{ color: '#2657ab' }}
+                        />
+                        <p>Cập nhật quá trình phát triễn của cây</p>
+                      </Space>
+                    </>
+                    // </Link>
+                  ),
+                }:null,
                 {
                   key: 3,
                   label: (
@@ -575,8 +599,9 @@ export default memo(function ProductCMS() {
           centered
           onCancel={() => setOpenModalUpdate(false)}
           footer={[]}
+          width={"50%"}
         >
-          <p className="py-[30px] text-center text-[20px] font-semibold">
+          <p className="py-[30px] text-center text-[32px] font-semibold">
             Câp nhật sản phẩm
           </p>
           <UpdateProductForm
@@ -645,7 +670,24 @@ export default memo(function ProductCMS() {
               data={currentProduct}
             />
           </Modal>
+          
+          
+
         </Modal>
+        <Modal
+            open={openModalGrowUp}
+            centered
+            onCancel={() => setOpenModalGrowUp(false)}
+            footer={[]}
+          >
+            <p className="py-[30px] text-center text-[20px] font-semibold">
+              Thêm quá trình phát triễn của cây
+            </p>
+            <GrowUpForm
+              onSuccess={() => mutate(`product/${currentProduct.id}`)}
+              productId={productId}
+            />
+          </Modal>
       </div>
     </div>
   );
