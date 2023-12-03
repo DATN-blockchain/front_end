@@ -120,231 +120,220 @@ export default function GeneralInformation() {
       <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   );
+  const textLabel = 'text-[#757f90]';
   return (
     <div>
+      <p className="text-[30px] bg-[#f8f8f8] w-fit px-[20px] mb-[20px] border-2 border-[#d6d6d6] py-[10px] rounded-xl font-semibold">
+        Thông tin cá nhân
+      </p>
       <div className="flex">
-        <div className="relative mr-[50px]">
-          <Spin spinning={loadingImage}>
-            <Avatar
-              // className="rounded-[50%] object-cover"
-              icon={<UserOutlined />}
-              alt=""
-              size={300}
-              src={currentUser.avatar || staticVariables.noImage.src}
-            />
-            <Upload
-              accept="image/png, image/jpeg, image/jpg"
-              showUploadList={false}
-              onChange={handleChangeAvatar}
-            >
-              <FontAwesomeIcon
-                className="absolute top-[10%] right-[10%]"
-                icon={faPenToSquare}
-                style={{ color: '#295094' }}
+        <div className="w-2/3">
+          <div className="relative w-fit mr-[50px]">
+            <Spin spinning={loadingImage}>
+              <Avatar
+                // className="rounded-[50%] object-cover"
+                icon={<UserOutlined />}
+                alt=""
+                size={300}
+                src={currentUser.avatar || staticVariables.noImage.src}
               />
-            </Upload>
-          </Spin>
-        </div>
-        <div className=" flex w-1/2 justify-between">
-          <div className="flex w-1/2 flex-col gap-y-4">
-            <div>
-              <InputCustom
-                APIurl={'user/update_me'}
-                queryType={'user'}
-                name="full_name"
-                classNameLabel="text-2xl font-bold"
-                initialValue={
-                  currentUser.full_name || currentUser.username || ''
-                }
-              />
-              <Tag className="w-fit" color="success">
-                {currentUser.system_role}
-              </Tag>
-            </div>
-            <Row className="w-full flex items-center">
-              <Col span={3}>
+              <Upload
+                accept="image/png, image/jpeg, image/jpg"
+                showUploadList={false}
+                onChange={handleChangeAvatar}
+              >
                 <FontAwesomeIcon
-                  className="mr-[10px]"
-                  size={'2xl'}
-                  icon={faLocationDot}
-                  style={{ color: '#2754b0' }}
+                  className="absolute top-[10%] right-[10%]"
+                  icon={faPenToSquare}
+                  style={{ color: '#295094' }}
                 />
-              </Col>
-              <Col>
+              </Upload>
+            </Spin>
+            <Tag className="w-fit block my-[20px] m-auto" color="success">
+              {currentUser.system_role}
+            </Tag>
+          </div>
+          <div className="flex full">
+            <div className="flex w-1/2 flex-col gap-y-5">
+              <div>
+                <p className="text-[#757f90]">Tên của bạn</p>
                 <InputCustom
                   APIurl={'user/update_me'}
                   queryType={'user'}
-                  name="as"
+                  name="full_name"
+                  classNameLabel="text-2xl font-bold"
                   initialValue={
-                    currentUser.address_real || 'Chưa được cập nhật'
+                    currentUser.full_name || currentUser.username || ''
                   }
                 />
-              </Col>
-            </Row>
-            <Row className="w-full flex items-center">
-              <Col span={3}>
-                <FontAwesomeIcon
-                  className="mr-[10px]"
-                  size={'2xl'}
-                  icon={faCakeCandles}
-                  style={{ color: '#2754b0' }}
-                />
-              </Col>
-              <Col>
-                <InputCustom
-                  input={{
-                    type: 'date',
-                  }}
-                  name="birthday"
-                  initialValue={currentUser.birthday || ''}
-                  APIurl={'user/update_me'}
-                  queryType={'user'}
-                />
-              </Col>
-            </Row>
-            <Row className="w-full flex items-center">
-              <Col span={3}>
-                <FontAwesomeIcon
-                  className="mr-[10px]"
-                  size={'2xl'}
-                  icon={faWallet}
-                  style={{ color: '#2754b0' }}
-                />
-              </Col>
-              <Col>
-                <p>{currentUser.account_balance} VNT</p>
-              </Col>
-            </Row>
-          </div>
-          <div className="flex w-1/2 flex-col gap-y-4">
-            <Row className="w-full flex items-center">
-              <Col span={3}>
-                <FontAwesomeIcon
-                  className="mr-[10px]"
-                  size={'2xl'}
-                  icon={faSquareFacebook}
-                  style={{ color: '#2754b0' }}
-                />
-              </Col>
-              <Col>
-                <InputCustom
-                  APIurl={'user/update_me'}
-                  queryType={'user'}
-                  name="as"
-                  initialValue="https://fb.com/"
-                />
-              </Col>
-            </Row>
-            <Row className="w-full flex items-center">
-              <Col span={3}>
-                <FontAwesomeIcon
-                  className="mr-[10px]"
-                  size={'2xl'}
-                  icon={faEnvelope}
-                  style={{ color: '#2754b0' }}
-                />
-              </Col>
-              <Col>
-                <InputCustom
-                  APIurl={'user/update_me'}
-                  queryType={'user'}
-                  name="as"
-                  initialValue={currentUser.email || 'Email chưa được cập nhật'}
-                />
-              </Col>
-            </Row>
-            <Row className="w-full flex items-center">
-              <Col span={3}>
-                <FontAwesomeIcon
-                  className="mr-[10px]"
-                  size={'2xl'}
-                  icon={faSquarePhone}
-                  style={{ color: '#2754b0' }}
-                />
-              </Col>
-              <Col>
-                <InputCustom
-                  name="as"
-                  initialValue={currentUser.phone || 'SĐT chưa được cập nhật'}
-                  APIurl={'user/update_me'}
-                  queryType={'user'}
-                />
-              </Col>
-            </Row>
+              </div>
+              <div className="flex flex-col gap-y-1">
+                <p className={`${textLabel}`}>Địa chỉ của bạn</p>
+                <Row className="w-full rounded-xl flex items-center">
+                  <Col span={3}>
+                    <FontAwesomeIcon
+                      className="mr-[10px]"
+                      size={'2xl'}
+                      icon={faLocationDot}
+                      style={{ color: '#2754b0' }}
+                    />
+                  </Col>
+                  <Col>
+                    <InputCustom
+                      APIurl={'user/update_me'}
+                      queryType={'user'}
+                      name="as"
+                      initialValue={
+                        currentUser.address_real || 'Chưa được cập nhật'
+                      }
+                    />
+                  </Col>
+                </Row>
+              </div>
+              <div className="flex flex-col gap-y-1">
+                <p className={`${textLabel}`}>Ngày sinh cảu bạn</p>
+                <Row className="w-full flex items-center">
+                  <Col span={3}>
+                    <FontAwesomeIcon
+                      className="mr-[10px]"
+                      size={'2xl'}
+                      icon={faCakeCandles}
+                      style={{ color: '#2754b0' }}
+                    />
+                  </Col>
+                  <Col>
+                    <InputCustom
+                      input={{
+                        type: 'date',
+                      }}
+                      name="birthday"
+                      initialValue={currentUser.birthday || ''}
+                      APIurl={'user/update_me'}
+                      queryType={'user'}
+                    />
+                  </Col>
+                </Row>
+              </div>
+              <div className="flex flex-col gap-y-1">
+                <p className={`${textLabel}`}>Ví của bạn</p>
+                <Row className="w-full flex items-center">
+                  <Col span={3}>
+                    <FontAwesomeIcon
+                      className="mr-[10px]"
+                      size={'2xl'}
+                      icon={faWallet}
+                      style={{ color: '#2754b0' }}
+                    />
+                  </Col>
+                  <Col>
+                    <p>{currentUser.account_balance} VNT</p>
+                  </Col>
+                </Row>
+              </div>
+            </div>
+            <div className="flex w-1/2 flex-col gap-y-5">
+              <div className="flex flex-col gap-y-1">
+                <p className={`${textLabel}`}>Liên kết facebook của bạn</p>
+                <Row className="w-full flex items-center">
+                  <Col span={3}>
+                    <FontAwesomeIcon
+                      className="mr-[10px]"
+                      size={'2xl'}
+                      icon={faSquareFacebook}
+                      style={{ color: '#2754b0' }}
+                    />
+                  </Col>
+                  <Col>
+                    <InputCustom
+                      APIurl={'user/update_me'}
+                      queryType={'user'}
+                      name="as"
+                      initialValue="https://fb.com/"
+                    />
+                  </Col>
+                </Row>
+              </div>
+              <div className="flex flex-col gap-y-1">
+                <p className={`${textLabel}`}>Email liên lạc của bạn</p>
+                <Row className="w-full flex items-center">
+                  <Col span={3}>
+                    <FontAwesomeIcon
+                      className="mr-[10px]"
+                      size={'2xl'}
+                      icon={faEnvelope}
+                      style={{ color: '#2754b0' }}
+                    />
+                  </Col>
+                  <Col>
+                    <InputCustom
+                      APIurl={'user/update_me'}
+                      queryType={'user'}
+                      name="as"
+                      initialValue={
+                        currentUser.email || 'Email chưa được cập nhật'
+                      }
+                    />
+                  </Col>
+                </Row>
+              </div>
+              <div className="flex flex-col gap-y-1">
+                <p className={`${textLabel}`}>Số điện thoại liên lạc của bạn</p>
+                <Row className="w-full flex items-center">
+                  <Col span={3}>
+                    <FontAwesomeIcon
+                      className="mr-[10px]"
+                      size={'2xl'}
+                      icon={faSquarePhone}
+                      style={{ color: '#2754b0' }}
+                    />
+                  </Col>
+                  <Col>
+                    <InputCustom
+                      name="as"
+                      initialValue={
+                        currentUser.phone || 'SĐT chưa được cập nhật'
+                      }
+                      APIurl={'user/update_me'}
+                      queryType={'user'}
+                    />
+                  </Col>
+                </Row>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="flex mt-[50px] justify-between px-[50px]">
-        <div className="w-1/2 relative">
-          <Typography.Title level={4}>
-            Hình ảnh của bạn{' '}
-            <FontAwesomeIcon
-              onClick={() => setShowModalUpload(!showModalUpload)}
-              className="ml-[10px]"
-              icon={faPenToSquare}
-              style={{ color: '#295094' }}
-            />
-          </Typography.Title>
-          <Modal
-            onCancel={() => setShowModalUpload(false)}
-            open={showModalUpload}
-            footer={[]}
-          >
-            <Typography.Title className="text-center" level={4}>
-              Thay đổi hình ảnh
-            </Typography.Title>
-            <Upload
-              // action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-              accept="image/png, image/jpeg, image/jpg"
-              listType="picture-card"
-              multiple
-              maxCount={8}
-              // fileList={fileList}
-              onPreview={handlePreview}
-              onChange={handleChange}
-            >
-              {fileList.length >= 8 ? null : uploadButton}
-            </Upload>
-            <Button className="block m-auto">Done</Button>
-            <Modal
-              open={previewOpen}
-              title={previewTitle}
-              footer={null}
-              onCancel={() => setPreviewOpen(false)}
-            >
+        <div className="1/3">
+          <div className="w-4/5 p-[30px] border-2 rounded-xl bg-[#f2f4fc]">
+            <div className="w-2/3 relative">
+              <p className="text-[25px] pb-[15px] font-semibold">
+                Renforcez la confiance !
+              </p>
+              <p className="text-[#87909f]">
+                Votre photo apparaitra sur les emails et sur le lien de prise de
+                rendez-vous en ligne Ceia permet å vos prospects diassccier une
+                agence å une
+              </p>
               <Image
-                alt="example"
-                style={{ width: '100%' }}
-                src={previewImage}
+                preview={false}
+                width={'100%'}
+                className="absolute top-0 right-0 translate-x-1/2"
+                alt=""
+                src={staticVariables.profile.src}
               />
-            </Modal>
-          </Modal>
-          <Carousel
-            style={{ borderRadius: '10px', overflow: 'hidden' }}
-            autoplay
-          >
-            <div>
-              <h3 style={contentStyle}>1</h3>
             </div>
-            <div>
-              <h3 style={contentStyle}>2</h3>
+          </div>
+          <div className="flex mt-[200px] justify-between px-[50px]">
+            <div className="w-full  ">
+              <Typography.Title level={4}>Giới thiệu bản thân</Typography.Title>
+              <TextAreaCustom
+                name="description"
+                passType="body"
+                initialValue={currentUser.description || ''}
+                APIurl={'user/update_me'}
+                queryType={'user'}
+              />
             </div>
-            <div>
-              <h3 style={contentStyle}>3</h3>
-            </div>
-            <div>
-              <h3 style={contentStyle}>4</h3>
-            </div>
-          </Carousel>
-        </div>
-        <div className="w-2/5">
-          <Typography.Title level={4}>Giới thiệu bản thân</Typography.Title>
-          <TextAreaCustom
-            name="description"
-            initialValue=""
-            APIurl={'user/update_me'}
-            queryType={'user'}
-          />
+          </div>
         </div>
       </div>
     </div>

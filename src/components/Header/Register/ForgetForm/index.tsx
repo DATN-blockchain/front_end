@@ -25,6 +25,7 @@ export default function ForgetForm({
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const fetchSendMail = async () => {
+    delete instanceAxios.defaults.headers.common.Authorization;
     setLoading(true);
     await instanceAxios
       .put(`auth/forget_password?email=${email}`)

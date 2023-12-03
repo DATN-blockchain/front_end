@@ -26,6 +26,7 @@ export const CheckoutForm = ({
   receiver,
   phone,
   address,
+  type_id,
   onSuccess,
 }: {
   form?: FormProps;
@@ -36,7 +37,8 @@ export const CheckoutForm = ({
   quantity: number;
   receiver: string;
   phone: string;
-  address: string;
+    address: string;
+    type_id: string;
   onSuccess?: () => void;
 }) => {
   const [priceTotal, setPriceTotal] = useState(buyQuantity * price);
@@ -58,8 +60,7 @@ export const CheckoutForm = ({
     await instanceAxios
       .put(
         `product/${producId}/purchase?price=${priceTotal}&quantity=${valueQuantity}&receiver=${receiver}&phone_number=${phone}&address=${address}${
-          cartId ? `&cart_id=${cartId}` : ``
-        }`
+          cartId ? `&cart_id=${cartId}` : ``} ${type_id? `&kg_type=${type_id}`: ``}`
       )
       .then((res) => {
         notification.success({

@@ -129,8 +129,9 @@ export default function CreateProductDescriptionForm({
   };
   return (
     <div>
-      <Form className={"px-[32px]"}
-        layout={"vertical"}
+      <Form
+        className={'px-[32px]'}
+        layout={'vertical'}
         form={form}
         labelCol={{ span: 10 }}
         wrapperCol={{ span: 14 }}

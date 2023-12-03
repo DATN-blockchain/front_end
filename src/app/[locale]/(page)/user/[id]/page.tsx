@@ -214,7 +214,7 @@ export default function UserInfo({ params }: { params: { id: string } }) {
               </Space>
               <Space
                 size={20}
-                className=" justify-between border-[1px] rounded px-[20px] py-[10px]"
+                className="justify-between border-[1px] rounded px-[20px] py-[10px]"
               >
                 <FontAwesomeIcon
                   size={'2x'}
@@ -227,7 +227,7 @@ export default function UserInfo({ params }: { params: { id: string } }) {
               </Space>
               <Space
                 size={20}
-                className=" justify-between border-[1px] rounded px-[20px] py-[10px]"
+                className="justify-between border-[1px] rounded px-[20px] py-[10px]"
               >
                 <FontAwesomeIcon size={'2x'} icon={faWallet} />
                 <Typography.Text copyable>
@@ -236,14 +236,14 @@ export default function UserInfo({ params }: { params: { id: string } }) {
               </Space>
               <Space
                 size={20}
-                className=" justify-between border-[1px] rounded px-[20px] py-[10px]"
+                className="justify-between border-[1px] rounded px-[20px] py-[10px]"
               >
                 <FontAwesomeIcon size={'2x'} icon={faEnvelope} />
                 <Typography.Text copyable>{currentUser.email}</Typography.Text>
               </Space>
               <Space
                 size={20}
-                className=" justify-between border-[1px] rounded px-[20px] py-[10px]"
+                className="justify-between border-[1px] rounded px-[20px] py-[10px]"
               >
                 <FontAwesomeIcon
                   size={'2x'}
@@ -268,14 +268,7 @@ export default function UserInfo({ params }: { params: { id: string } }) {
                     label: 'Xem mô tả',
                     children: (
                       <div className="pr-[50px] text-justify">
-                        {`This limited series of Midnight Society Access Passes grants the
-              holder studio-specific perks including but not limited to: a
-              one-of-a-kind "Variant" 🤣😂😊😊 PFP \n
-              (profile pic) with unique VisorCortex,
-              Call Sign, and other attributes of various rarity. Founders are
-              entitled to voting rights on game features, exclusive access to
-              studio events, first dibs on merchandise, early access to the
-              latest dev build, and more.`}
+                        {currentUser.description}
                       </div>
                     ),
                   },
@@ -284,22 +277,6 @@ export default function UserInfo({ params }: { params: { id: string } }) {
             </div>
           </div>
           <div className="flex flex-col w-3/5">
-            <div className="w-[500px] m-auto">
-              <Carousel waitForAnimate={true} effect="fade" autoplay>
-                <div>
-                  <h3 style={contentStyle}>1qwe</h3>
-                </div>
-                <div>
-                  <h3 style={contentStyle}>2</h3>
-                </div>
-                <div>
-                  <h3 style={contentStyle}>3</h3>
-                </div>
-                <div>
-                  <h3 style={contentStyle}>4</h3>
-                </div>
-              </Carousel>
-            </div>
             <div className="flex px-[30px]">
               <Row gutter={[50, 12]} justify={'space-around'} align={'middle'}>
                 {statisticItems.map((item, index) => (

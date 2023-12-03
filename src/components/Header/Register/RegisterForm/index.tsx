@@ -19,6 +19,7 @@ export default function RegisterForm({
   const [loading, setLoading] = useState(false);
 
   const onFinish = async (data: FieldType) => {
+    delete instanceAxios.defaults.headers.common.Authorization;
     setLoading(true);
     await instanceAxios
       .post('auth/register', data)
@@ -36,7 +37,8 @@ export default function RegisterForm({
   };
   return (
     <div>
-      <Form layout='vertical'
+      <Form
+        layout="vertical"
         className="m-auto"
         name="basic"
         labelCol={{ span: 6 }}
@@ -52,14 +54,14 @@ export default function RegisterForm({
           name="email"
           rules={[{ required: false }]}
         >
-          <Input className='h-10 text-[18px]'/>
+          <Input className="h-10 text-[18px]" />
         </Form.Item>
         <Form.Item<FieldType>
           label="username"
           name="username"
           rules={[{ required: false }]}
         >
-          <Input className='h-10 text-[18px]' />
+          <Input className="h-10 text-[18px]" />
         </Form.Item>
         {/* <Form.Item<FieldType>
           label="Số điện thoại"

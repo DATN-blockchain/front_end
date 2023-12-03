@@ -1,4 +1,5 @@
 import instanceAxios from '@/api/instanceAxios';
+import { useAppSelector } from '@/hooks';
 import currency from '@/services/currency';
 import {
   faCircleXmark,
@@ -57,34 +58,51 @@ export default function TransactionCMS() {
   const [transactionTotal, setTransactionTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [listTransaction, setListTransaction] = useState<TransactionType[]>([]);
-
+  const currentUser = useAppSelector((state) => state.user);
   const fetchDataTransaction = useCallback(async () => {
     setLoading(true);
+    let url_api = "";
+    if (currentTable === 'BUY') {
+      url_api = currentUser.user.system_role == "FARMER" ? `transaction_sf/list?skip=${skip - 1}&limit=${limit}` : `transaction_fm/list?skip=${skip - 1}&limit=${limit}`;
+    }
+    else {
+      url_api = `product/order_product/history_sale?skip=${skip - 1}&limit=${limit}`;
+    }
     await instanceAxios
       .get(
-        currentTable === 'BUY'
-          ? `transaction_sf/list?skip=${skip - 1}&limit=${limit}`
-          : `product/order_product/history_sale?skip=${skip - 1}&limit=${limit}`
+        `${url_api}`
       )
       .then((res) => {
         if (currentTable === 'BUY') {
-          setTransactionTotal(res.data.data.total_transaction_sf);
-          const newListTransaction = [...res.data.data.list_transaction_sf].map(
+          let newListTransaction = null;
+          if (currentUser.user.system_role == "FARMER") {
+            setTransactionTotal(res.data.data.total_transaction_sf);
+            newListTransaction = [...res.data.data.list_transaction_sf].map(
             (item, index) => ({ key: (skip - 1) * limit + index + 1, ...item })
-          );
+            );
+          }
+          else {
+            setTransactionTotal(res.data.data.total_transaction_fm);
+            newListTransaction = [...res.data.data.list_transaction_fm].map(
+              (item, index) => ({ key: (skip - 1) * limit + index + 1, ...item }));
+          }
+          console.log(newListTransaction);
           setListTransaction(newListTransaction);
         } else {
           console.log(res.data.data);
-          setTransactionTotal(res.data.data.total_transaction);
-          const newListTransaction = [...res.data.data.list_transaction].map(
-            (item, index) => ({ key: (skip - 1) * limit + index + 1, ...item })
-          );
+          setTransactionTotal(res.data.data.total_transaction || 0);
+          let newListTransaction = [];
+          if (res.data.data.list_transaction) {
+            newListTransaction =  [...res.data.data.list_transaction].map(
+              (item, index) => ({ key: (skip - 1) * limit + index + 1, ...item })
+            );
+          }
           setListTransaction(newListTransaction);
         }
       })
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
-  }, [currentTable, limit, skip]);
+  }, [currentTable, currentUser.user.system_role, limit, skip]);
   useEffect(() => {
     fetchDataTransaction();
   }, [fetchDataTransaction]);
@@ -169,6 +187,7 @@ export default function TransactionCMS() {
         <p className="text-3xl font-medium	">Danh sách sản phẩm</p>
       </div>
       <Segmented
+        className="my-[20px]"
         size={'large'}
         defaultValue={currentTable}
         onChange={(e) => setCurrentTable(e.toString())}

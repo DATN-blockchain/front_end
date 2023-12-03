@@ -58,6 +58,7 @@ export default async function LocaleLayout({
                 ...theme,
                 token: {
                   colorBgLayout: '#f6f6f6',
+                  borderRadiusLG: 24,
                 },
                 components: {
                   Segmented: {

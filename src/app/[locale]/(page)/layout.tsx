@@ -12,6 +12,7 @@ import { useSWRConfig } from 'swr';
 import Footer from '@/components/Footer';
 import { getCookie } from 'cookies-next';
 import dynamic from 'next/dynamic';
+import pusher from '@/services/pusher';
 // export function generateStaticParams() {
 //   return [{ locale: 'en' }, { locale: 'vi' }];
 // }
@@ -31,9 +32,9 @@ interface NotificationType {
   };
 }
 
-export const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY || '', {
-  cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER || '', // Replace with 'cluster' from dashboard
-});
+// export const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY || '', {
+//   cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER || '', // Replace with 'cluster' from dashboard
+// });
 
 export default function LocaleLayout({ children }: { children: ReactNode }) {
   const currentUser = useAppSelector((state) => state.user);
@@ -41,21 +42,34 @@ export default function LocaleLayout({ children }: { children: ReactNode }) {
   const { mutate } = useSWRConfig();
   const cookie = getCookie('access_token');
   const route = useRouter();
+  // useEffect(() => {
+  //   const channel = pusher.subscribe('general-channel');
+  //   channel.bind(currentUser.user.id || '', (data: any) => {
+  //     message.info('Bạn vừa có thông báo mới');
+  //     if (data?.params?.notification_type === 'COMMENT_NOTIFICATION') {
+  //       mutate(`comments/list?marketplace_id=${data?.params?.marketplace_id}`);
+  //     }
+  //     mutate('notifications/list');
+  //     console.log(data);
+  //   });
+
+  //   return () => {
+  //     pusher.unsubscribe('general-channel');
+  //   };
+  // }, [currentUser, mutate]);
   useEffect(() => {
     const channel = pusher.subscribe('general-channel');
-    channel.bind(currentUser.user.id || '', (data: NotificationType) => {
-      message.info('Bạn vừa có thông báo mới');
-      if (data.params.notification_type === 'COMMENT_NOTIFICATION') {
-        mutate(`comments/list?marketplace_id=${data.params.marketplace_id}`);
+    channel.bind(currentUser.user.id || '', (data: any) => {
+      if (data?.type === 'MESSENGER') {
+        mutate(`/messenger/list_messenger_detail`);
       }
-      mutate('notifications/list');
-      console.log(data);
     });
 
     return () => {
       pusher.unsubscribe('general-channel');
     };
   }, [currentUser, mutate]);
+
   useEffect(() => {
     if (!cookie) {
       route.push('/');
