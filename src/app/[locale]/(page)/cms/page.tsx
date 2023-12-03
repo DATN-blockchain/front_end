@@ -1,8 +1,14 @@
 'use client';
-import React, { memo, useEffect, useState } from 'react';
+import ManageUser from '@/components/CMS/Admin/ManageUser';
+import ChangPassword from '@/components/CMS/ChangePassword';
+import Deposit from '@/components/CMS/Deposit';
+import GeneralInformation from '@/components/CMS/GeneralInformation';
+import ProductCMS from '@/components/CMS/Product';
+import Statistical from '@/components/CMS/Statistical';
+import TransactionCMS from '@/components/CMS/Transaction';
+import TransactionStatus from '@/components/CMS/TransactionStatus';
+import { useAppSelector } from '@/hooks';
 import {
-  DesktopOutlined,
-  FileOutlined,
   LeftCircleTwoTone,
   PieChartOutlined,
   RightCircleTwoTone,
@@ -10,19 +16,8 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import GeneralInformation from '@/components/CMS/GeneralInformation';
-import ChangPassword from '@/components/CMS/ChangePassword';
-import ProductCMS from '@/components/CMS/Product';
-import TransactionCMS from '@/components/CMS/Transaction';
-import { useAppSelector } from '@/hooks';
-import { useRouter } from 'next/navigation';
-import ManageUser from '@/components/CMS/Admin/ManageUser';
-import ManageProduct from '@/components/CMS/Admin/ManageProduct';
-import Statistical from '@/components/CMS/Statistical';
-import { useEffectOnce } from 'usehooks-ts';
-import TransactionStatus from '@/components/CMS/TransactionStatus';
-import Deposit from '@/components/CMS/Deposit';
+import { Layout, Menu, theme } from 'antd';
+import React, { memo, useState } from 'react';
 
 const { Header, Content, Footer, Sider } = Layout;
 

@@ -2,7 +2,6 @@ import staticVariables from '@/static';
 import { faUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Avatar, Col, Row, Tooltip } from 'antd';
-import React from 'react';
 
 export default function ChainItem({
   role = '',
@@ -13,6 +12,7 @@ export default function ChainItem({
 }) {
   return (
     <Row className="px-[10px] py-[15px] border-[1px]">
+      S
       <Col span={2}>
         <div>
           <Avatar

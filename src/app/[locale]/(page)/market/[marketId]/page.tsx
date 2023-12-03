@@ -1,113 +1,63 @@
 'use client';
-import staticVariables from '@/static';
+import instanceAxios from '@/api/instanceAxios';
+import CommentItem from '@/components/Contents/ProductInfo/CommentItem';
+import Description from '@/components/Contents/ProductInfo/Description';
+import GrowUpItem from '@/components/Contents/ProductInfo/GrowUpItem';
+import { CheckoutForm } from '@/components/Contents/common/CheckoutForm';
+import CommentInput from '@/components/Contents/common/CommentInput';
+import { useAppDispatch, useAppSelector } from '@/hooks';
+import { openMessage } from '@/reducers/openMessageSilce';
+import currency from '@/services/currency';
+import useLogin from '@/services/requireLogin';
 import {
   CheckCircleTwoTone,
-  DeleteTwoTone,
-  EditTwoTone,
   EllipsisOutlined,
-  EyeOutlined,
   FieldTimeOutlined,
-  MailOutlined,
   MinusCircleOutlined,
-  MinusSquareFilled,
-  MinusSquareOutlined,
-  PhoneOutlined,
-  PicLeftOutlined,
   PlusCircleOutlined,
-  PlusCircleTwoTone,
-  PlusOutlined,
-  PlusSquareFilled,
-  PlusSquareOutlined,
-  SearchOutlined,
-  SendOutlined,
   ShareAltOutlined,
-  ShoppingCartOutlined,
 } from '@ant-design/icons';
-import {
-  Avatar,
-  Button,
-  Carousel,
-  Col,
-  ConfigProvider,
-  DatePicker,
-  Empty,
-  Form,
-  Image,
-  Input,
-  InputNumber,
-  List,
-  Modal,
-  Popconfirm,
-  Popover,
-  QRCode,
-  Row,
-  Segmented,
-  Space,
-  Table,
-  Tag,
-  Timeline,
-  Tooltip as TooltipAntd,
-  Typography,
-  Upload,
-  UploadFile,
-  notification,
-} from 'antd';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
-import React, {
-  ReactNode,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFacebookMessenger } from '@fortawesome/free-brands-svg-icons';
 import {
   faArrowTrendUp,
   faCartShopping,
   faCircleCheck,
-  faEnvelope,
-  faMobileScreenButton,
   faUpRightFromSquare,
 } from '@fortawesome/free-solid-svg-icons';
-import GrowUpItem from '@/components/Contents/ProductInfo/GrowUpItem';
-import Paragraph from 'antd/es/typography/Paragraph';
-import CommentItem from '@/components/Contents/ProductInfo/CommentItem';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  Button,
+  Col,
+  Empty,
+  Image,
+  InputNumber,
+  Modal,
+  Row,
+  Space,
+  Table,
+  UploadFile,
+  notification,
+} from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { CheckoutForm } from '@/components/Contents/common/CheckoutForm';
-import instanceAxios from '@/api/instanceAxios';
-import GrowUpForm from '@/components/Contents/ProductInfo/GrowUpForm';
-import TextAreaCustom from '@/components/Contents/common/InputCustom/TextAreaCustom';
-import InputCustom from '@/components/Contents/common/InputCustom/InputCustom';
-import { useAppDispatch, useAppSelector } from '@/hooks';
-import { useEffectOnce } from 'usehooks-ts';
-import CommentInput from '@/components/Contents/common/CommentInput';
-import moment from 'moment';
-import { useTranslations } from 'next-intl';
-import CreateDescriptionForm from '@/components/Contents/ProductInfo/CreateDescriptionForm';
 import { UploadChangeParam } from 'antd/es/upload';
-import useSWR, { useSWRConfig } from 'swr';
-import InputNumberCustom from '@/components/Contents/common/InputCustom/InputNumberCustom';
-import { Chart } from '@/components/CMS/Statistical/Chart';
-import { Line } from 'react-chartjs-2';
+import {
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LineElement,
+  LinearScale,
+  PointElement,
+  Title,
+  Tooltip,
+} from 'chart.js';
+import moment from 'moment';
 import Link from 'next/link';
-import Owner from './components/Owner';
-import ProductOrigin from './components/PoductOrigin';
-import currency from '@/services/currency';
-import Description from '@/components/Contents/ProductInfo/Description';
-import useLogin from '@/services/requireLogin';
+import React, { useState } from 'react';
+import { Line } from 'react-chartjs-2';
+import useSWR, { useSWRConfig } from 'swr';
+import { useEffectOnce } from 'usehooks-ts';
 import ChainItem from './components/ChainItem';
-import { faFacebookMessenger } from '@fortawesome/free-brands-svg-icons';
-import { openMessage } from '@/reducers/openMessageSilce';
+import ProductOrigin from './components/PoductOrigin';
 
 export default function MarketInfo({
   params,
@@ -137,11 +87,11 @@ export default function MarketInfo({
   const [commentList, setCommentList] = useState<CommentItemType[]>([]);
   const [showModalPay, setShowModalPay] = useState(false);
   const [typeId, setTypeId] = useState<string>();
-  console.log("product type", dataProduct);
+  console.log('product type', dataProduct);
   const currentUser = useAppSelector((state) => state.user.user);
   const { mutate } = useSWRConfig();
   const { login } = useLogin();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   console.log('list transaction:', dataListTransaction);
 
   ChartJS.register(
@@ -272,7 +222,8 @@ export default function MarketInfo({
   const fetchDataComment = async () => {
     await instanceAxios
       .get(
-        `comments/list?marketplace_id=${params.marketId
+        `comments/list?marketplace_id=${
+          params.marketId
         }&skip=${0}&limit=${1000}`
       )
       .then((res) => {
@@ -354,10 +305,13 @@ export default function MarketInfo({
     borderRadius: '10px',
   };
 
-  const handleOnClickButtonTypeProduct = (typeId: string, classifyGoods: CountPrice) => {
+  const handleOnClickButtonTypeProduct = (
+    typeId: string,
+    classifyGoods: CountPrice
+  ) => {
     setCountPrice(classifyGoods);
     setTypeId(typeId);
-  }
+  };
 
   const columns: ColumnsType<TransactionType> = [
     {
@@ -424,13 +378,24 @@ export default function MarketInfo({
               <div className="w-1/2 top-4/12 rounded">
                 <div className="w-full flex justify-between text-[30px] text-[#222222] font-semibold font-[Work Sans]">
                   <p>{dataProduct.name}</p>
-                    <div className="text-[20px] mr-[20px] space-x-8">
-                      <FontAwesomeIcon onClick={() => {
-                        if (currentUser.id !== dataOwner.id)dispatch(openMessage({id: dataOwner.id, avatar: dataOwner.avatar, username: dataOwner.username}))
-                      }} icon={faFacebookMessenger} style={{ color: "#005eff", }} />
+                  <div className="text-[20px] mr-[20px] space-x-8">
+                    <FontAwesomeIcon
+                      onClick={() => {
+                        if (currentUser.id !== dataOwner.id)
+                          dispatch(
+                            openMessage({
+                              id: dataOwner.id,
+                              avatar: dataOwner.avatar,
+                              username: dataOwner.username,
+                            })
+                          );
+                      }}
+                      icon={faFacebookMessenger}
+                      style={{ color: '#005eff' }}
+                    />
                     <ShareAltOutlined />
                     <EllipsisOutlined />
-                      {/* <FontAwesomeIcon icon={faFacebookMessenger} className='text-  ' /> */}
+                    {/* <FontAwesomeIcon icon={faFacebookMessenger} className='text-  ' /> */}
                   </div>
                 </div>
                 <div className="flex w-full gap-x-2 tetx-[16px] text-[#7B7B7B] font-light">
@@ -457,30 +422,42 @@ export default function MarketInfo({
                 <div className="select-none	rounded-xl w-full mt-[20px] border-[1px] border-gray-300">
                   <div className="flex items-center space-x-4 border-b-[1px] p-[20px]">
                     <FieldTimeOutlined className="text-[20px]" />
-                    {dataProduct.product_type !== "FARMER" ? (
+                    {dataProduct.product_type !== 'FARMER' ? (
                       <p className="text-[16px] tracking-wider">
                         Ngày đăng bán:{' '}
                         {moment(dataMarket.created_at).format('LLL')}
                       </p>
                     ) : (
-                      dataProduct.classify_goods?.map((item) => (
+                      dataProduct.classify_goods?.map((item) =>
                         Object.entries(item.data).map(([key, countPrice]) => (
-                          <Button key={key} onClick={()=>{handleOnClickButtonTypeProduct(key, countPrice)}}>{key}</Button>
-                        )
-                        ))))}
+                          <Button
+                            key={key}
+                            onClick={() => {
+                              handleOnClickButtonTypeProduct(key, countPrice);
+                            }}
+                          >
+                            {key}
+                          </Button>
+                        ))
+                      )
+                    )}
                   </div>
                   <div className="p-[20px]">
                     <div className="flex items-center space-x-20">
                       <div className="items-center">
                         <p>Giá sản phẩm</p>
                         <p className="text-[30px] tracking-widest font-[600]">
-                          {`${countPrice.price ||dataProduct.price || 0} ${currency}`}
+                          {`${
+                            countPrice.price || dataProduct.price || 0
+                          } ${currency}`}
                         </p>
                       </div>
                       <div className="items-center">
                         <p>Sản phẩm hiện còn</p>
                         <p className="text-[30px] tracking-widest font-[600]">
-                          {`${countPrice.quantity||dataProduct.quantity || 0}`}
+                          {`${
+                            countPrice.quantity || dataProduct.quantity || 0
+                          }`}
                         </p>
                       </div>
                     </div>
@@ -560,8 +537,8 @@ export default function MarketInfo({
                               buyQuantity
                                 ? fetchAddCartItem()
                                 : notification.error({
-                                  message: 'Vui lòng chọn số lượng',
-                                });
+                                    message: 'Vui lòng chọn số lượng',
+                                  });
                             })
                           }
                           className="w-1/5 text-center bg-[#2081E1] py-[12px]"
@@ -580,7 +557,7 @@ export default function MarketInfo({
                     >
                       <CheckoutForm
                         producId={dataProduct?.id || ''}
-                        price={countPrice.price||dataProduct.price || 0}
+                        price={countPrice.price || dataProduct.price || 0}
                         quantity={dataProduct.quantity || 0}
                         buyQuantity={buyQuantity}
                         onSuccess={() => {
@@ -590,8 +567,8 @@ export default function MarketInfo({
                         }}
                         receiver={''}
                         phone={''}
-                          address={''}
-                          type_id={typeId || ""}
+                        address={''}
+                        type_id={typeId || ''}
                       />
                     </Modal>
                   </div>
@@ -732,18 +709,18 @@ export default function MarketInfo({
                 {((dataMarket.order_type !== 'SEEDLING_COMPANY' &&
                   dataHistory.transactions_sf) ||
                   dataHistory.transactions_fm) && (
-                    <ProductOrigin
-                      originType={
-                        dataMarket.order_type === 'SEEDLING_COMPANY'
-                          ? 'seed'
-                          : 'provider'
-                      }
-                      transactions={
-                        dataHistory.transactions_sf || dataHistory.transactions_fm
-                      }
-                      {...dataHistory}
-                    />
-                  )}
+                  <ProductOrigin
+                    originType={
+                      dataMarket.order_type === 'SEEDLING_COMPANY'
+                        ? 'seed'
+                        : 'provider'
+                    }
+                    transactions={
+                      dataHistory.transactions_sf || dataHistory.transactions_fm
+                    }
+                    {...dataHistory}
+                  />
+                )}
               </>
             )}
             {dataMarket.order_type === 'FARMER' && (
@@ -785,10 +762,11 @@ export default function MarketInfo({
                     {dataProduct.detail_description?.map((item, index) => (
                       <Image
                         key={index}
-                        className={`border-2 rounded-full p-[3px] object-cover ${index === selectedDescription
-                          ? 'border-green-500'
-                          : 'border-gray-200'
-                          }`}
+                        className={`border-2 rounded-full p-[3px] object-cover ${
+                          index === selectedDescription
+                            ? 'border-green-500'
+                            : 'border-gray-200'
+                        }`}
                         onClick={() => setSelectedDescription(index)}
                         width={150}
                         height={150}
