@@ -20,6 +20,13 @@ interface UserType {
   system_role?: string;
   account_balance?: number;
   description?: string;
+  tx_hash?: string;
+}
+
+interface OwnerProductType {
+  manufacturer? : UserType;
+  farmer? : UserType;
+  seedling_company? : UserType;
 }
 interface HistoryType {
   id?: string;
@@ -48,6 +55,36 @@ interface HistoryType {
   };
   transactions_fm?: DetailHistoryType;
   transactions_sf?: DetailHistoryType;
+}
+
+interface DetailHistoryTypeTest {
+  id?: string;
+  product_type?: string;
+  product_status?: string;
+  name?: string;
+  description?: string;
+  price?: number;
+  quantity?: number;
+  number_of_sales?: number;
+  is_sale?: boolean;
+  banner?: string;
+  created_by?: string;
+  tx_hash?: string;
+  view?: number;
+  created_at?: string;
+  marketplace_id?: string;
+  detail_description?: any[]; // Thay any bằng loại dữ liệu chính xác nếu có
+  classify_goods?: any[]; // Thay any bằng loại dữ liệu chính xác nếu có
+  user?: {
+    id?: string;
+    avatar?: string;
+    username?: string;
+    full_name?: string;
+    email?: string;
+    phone?: string;
+    system_role?: string;
+    address_wallet?: string;
+  };
 }
 
 interface DetailHistoryType {

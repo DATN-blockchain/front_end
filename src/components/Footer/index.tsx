@@ -1,9 +1,6 @@
 'use client';
 
 import instanceAxios from '@/api/instanceAxios';
-import { useAppDispatch, useAppSelector } from '@/hooks';
-import { closeMessage, openMessage } from '@/reducers/openMessageSilce';
-import pusher from '@/services/pusher';
 import staticVariables from '@/static';
 import {
   CloseOutlined,
@@ -17,12 +14,16 @@ import {
   faPhone,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Avatar, Drawer, FloatButton, Input, message } from 'antd';
+import { Avatar, Drawer, FloatButton, Input, Modal, message } from 'antd';
 import Meta from 'antd/es/card/Meta';
 import moment from 'moment';
 import { memo, useCallback, useEffect, useState } from 'react';
-import useSWR, { mutate } from 'swr';
+import CommentInput from '../Contents/common/CommentInput';
 import MessageItem from './MessageItem';
+import { useAppDispatch, useAppSelector } from '@/hooks';
+import useSWR, { mutate } from 'swr';
+import pusher from '@/services/pusher';
+import { closeMessage, openMessage } from '@/reducers/openMessageSilce';
 
 interface User {
   username: string;

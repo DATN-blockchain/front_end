@@ -12,4 +12,5 @@ const instanceAxios = axios.create({
 });
 if (cookie)
   instanceAxios.defaults.headers.common.Authorization = `Bearer ${cookie}`;
+// else delete instanceAxios.defaults.headers.common.Authorization;
 export default instanceAxios;

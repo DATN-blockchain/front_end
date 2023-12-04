@@ -1,60 +1,79 @@
 'use client';
-import instanceAxios from '@/api/instanceAxios';
-import { useAppDispatch, useAppSelector } from '@/hooks';
-import { setshowFormLogin } from '@/reducers/showFormSlice';
-import { logOut, setLogin } from '@/reducers/userSlice';
-import currency from '@/services/currency';
-import pusher from '@/services/pusher';
 import staticVariables from '@/static';
-import {
-  FieldTimeOutlined,
-  GroupOutlined,
-  HomeOutlined,
-  QuestionCircleOutlined,
-} from '@ant-design/icons';
-import { faBell, faUser } from '@fortawesome/free-regular-svg-icons';
-import {
-  faArrowRightFromBracket,
-  faCartShopping,
-  faEarthAsia,
-  // faUser,
-  faUserGear,
-  faWallet,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Avatar,
   Badge,
+  Button,
+  Col,
   ConfigProvider,
   Dropdown,
   Empty,
+  Image,
+  Input,
+  InputNumber,
   MenuProps,
   Modal,
   Popover,
   Radio,
   RadioChangeEvent,
+  Row,
   Select,
   Space,
+  message,
   notification,
 } from 'antd';
-import { deleteCookie } from 'cookies-next';
+import Link from 'next/link';
+import { deleteCookie, getCookie } from 'cookies-next';
+import React, {
+  ChangeEvent,
+  ReactNode,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import Login from './Login';
+import Register from './Register';
+import { useDebounce, useEffectOnce, useOnClickOutside } from 'usehooks-ts';
+import { usePathname as pathLanguage, useRouter } from 'next-intl/client';
+import { useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
+import { usePathname } from 'next/navigation';
+import { useAppDispatch, useAppSelector } from '@/hooks';
+import useSWR, { useSWRConfig } from 'swr';
+import {
+  BorderBottomOutlined,
+  FieldTimeOutlined,
+  GroupOutlined,
+  HomeOutlined,
+  LogoutOutlined,
+  QuestionCircleOutlined,
+} from '@ant-design/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faArrowRightFromBracket,
+  faCartShopping,
+  faEarthAsia,
+  faHouse,
+  // faUser,
+  faUserGear,
+  faWallet,
+} from '@fortawesome/free-solid-svg-icons';
+import { logOut, setLogin } from '@/reducers/userSlice';
+import SearchItem from './SearchItem';
+import instanceAxios from '@/api/instanceAxios';
+import { setshowFormLogin } from '@/reducers/showFormSlice';
+import ForgetForm from './Register/ForgetForm';
+import { Inter } from 'next/font/google';
+import { faBell, faUser } from '@fortawesome/free-regular-svg-icons';
+import NotificationItem from './NotificationItem';
 import moment from 'moment';
 import 'moment/locale/vi';
-import { useLocale, useTranslations } from 'next-intl';
-import { usePathname as pathLanguage, useRouter } from 'next-intl/client';
-import { Inter } from 'next/font/google';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import useSWR, { useSWRConfig } from 'swr';
-import { useDebounce, useEffectOnce, useOnClickOutside } from 'usehooks-ts';
-import { CheckoutForm } from '../Contents/common/CheckoutForm';
+import currency from '@/services/currency';
 import CartItem from './CartItem';
-import Login from './Login';
-import NotificationItem from './NotificationItem';
-import Register from './Register';
-import ForgetForm from './Register/ForgetForm';
-import SearchItem from './SearchItem';
+import { CheckoutForm } from '../Contents/common/CheckoutForm';
+import pusher from '@/services/pusher';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -141,6 +160,7 @@ export default memo(function Header() {
     await instanceAxios
       .get('user/me')
       .then((res) => {
+        // console.log(res.data.data);
         dispatch(setLogin({ logged: true, user: { ...res.data.data } }));
       })
       .catch((err) => console.log(err));
@@ -155,6 +175,7 @@ export default memo(function Header() {
       .then((res) => {
         setListNotifications(res.data.data);
         setListUnreadNotifications(res.data.meta.unread_total);
+        // setTotalNotifications(res.data.data.meta.total);
       })
       .catch((err) => console.log(err));
   };
@@ -272,7 +293,35 @@ export default memo(function Header() {
       ),
       key: '0',
     },
-
+    // {
+    //   label: (
+    //     <Popover
+    //       title="Thông báo của bạn"
+    //       placement={'left'}
+    //       content={contentNotifications}
+    //     >
+    //       <Row gutter={[16, 0]} wrap={false} justify={'start'}>
+    //         <Col className="justify-center" span={6}>
+    //           <FontAwesomeIcon icon={faBell} style={{ color: '#20249d' }} />
+    //         </Col>
+    //         <Col span={24}>
+    //           {listUnreadNotifications ? (
+    //             <Badge
+    //               count={listUnreadNotifications}
+    //               offset={[5, 8]}
+    //               color="blue"
+    //             >
+    //               <p className="pr-[10px]">Thông báo</p>
+    //             </Badge>
+    //           ) : (
+    //             <p className="pr-[10px]">Thông báo</p>
+    //           )}
+    //         </Col>
+    //       </Row>
+    //     </Popover>
+    //   ),
+    //   key: '1',
+    // },
     {
       label: (
         <Space
@@ -285,7 +334,26 @@ export default memo(function Header() {
       ),
       key: '1',
     },
-
+    // {
+    //   label: (
+    //     <ConfigProvider
+    //       theme={{
+    //         token: {
+    //           lineWidth: 3,
+    //           paddingXS: 10,
+    //         },
+    //       }}
+    //     >
+    //       <Space wrap={false} onClick={() => setShowCartModal(true)}>
+    //         <Badge count={listCart.length} offset={[-30, 8]} color="blue">
+    //           <FontAwesomeIcon icon={faCartShopping} />
+    //         </Badge>
+    //         <p>Giỏ hàng</p>
+    //       </Space>
+    //     </ConfigProvider>
+    //   ),
+    //   key: '2',
+    // },
     {
       label: (
         <Link href={'/cms'}>
@@ -429,8 +497,13 @@ export default memo(function Header() {
       <div className="flex items-center ">
         <ConfigProvider
           theme={{
-            token: {},
-            components: {},
+            token: {
+              // colorText: `${isHomePage && 'white'}`,
+              // colorBgElevated: `${isHomePage && '#363636FF'}`,
+            },
+            components: {
+              // Select: { controlItemBgActive: `${isHomePage && '#111126CE'}` },
+            },
           }}
         >
           <Space className="w-fit bg-[#1212120A] hover:bg-[#ececec] px-[20px] py-[10px] rounded-lg mr-[20px]">
@@ -489,6 +562,15 @@ export default memo(function Header() {
               menu={{ items }}
               placement={'bottom'}
             >
+              {/* {listUnreadNotifications ? (
+                <Badge
+                  count={listUnreadNotifications}
+                  offset={[5, 10]}
+                  color="blue"
+                >
+                  <Avatar src={currentUser.avatar} size="large" />
+                </Badge>
+              ) : ( */}
               <div className="bg-[#1212120A] hover:bg-[#ececec]  px-[20px] py-[10px] rounded-lg">
                 {/* <Avatar src={currentUser.avatar} size={20} /> */}
                 <FontAwesomeIcon icon={faUser} style={{ color: '#000000' }} />
@@ -497,7 +579,10 @@ export default memo(function Header() {
             </Dropdown>
             <ConfigProvider
               theme={{
-                token: {},
+                token: {
+                  // lineWidth: 3,
+                  // paddingXS: 10,
+                },
               }}
             >
               <Space
