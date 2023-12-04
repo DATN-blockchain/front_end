@@ -1,63 +1,113 @@
 'use client';
-import instanceAxios from '@/api/instanceAxios';
-import CommentItem from '@/components/Contents/ProductInfo/CommentItem';
-import Description from '@/components/Contents/ProductInfo/Description';
-import GrowUpItem from '@/components/Contents/ProductInfo/GrowUpItem';
-import { CheckoutForm } from '@/components/Contents/common/CheckoutForm';
-import CommentInput from '@/components/Contents/common/CommentInput';
-import { useAppDispatch, useAppSelector } from '@/hooks';
-import { openMessage } from '@/reducers/openMessageSilce';
-import currency from '@/services/currency';
-import useLogin from '@/services/requireLogin';
+import staticVariables from '@/static';
 import {
   CheckCircleTwoTone,
+  DeleteTwoTone,
+  EditTwoTone,
   EllipsisOutlined,
+  EyeOutlined,
   FieldTimeOutlined,
+  MailOutlined,
   MinusCircleOutlined,
+  MinusSquareFilled,
+  MinusSquareOutlined,
+  PhoneOutlined,
+  PicLeftOutlined,
   PlusCircleOutlined,
+  PlusCircleTwoTone,
+  PlusOutlined,
+  PlusSquareFilled,
+  PlusSquareOutlined,
+  SearchOutlined,
+  SendOutlined,
   ShareAltOutlined,
+  ShoppingCartOutlined,
 } from '@ant-design/icons';
-import { faFacebookMessenger } from '@fortawesome/free-brands-svg-icons';
+import {
+  Avatar,
+  Button,
+  Carousel,
+  Col,
+  ConfigProvider,
+  DatePicker,
+  Empty,
+  Form,
+  Image,
+  Input,
+  InputNumber,
+  List,
+  Modal,
+  Popconfirm,
+  Popover,
+  QRCode,
+  Row,
+  Segmented,
+  Space,
+  Table,
+  Tag,
+  Timeline,
+  Tooltip as TooltipAntd,
+  Typography,
+  Upload,
+  UploadFile,
+  notification,
+} from 'antd';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import React, {
+  ReactNode,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faArrowTrendUp,
   faCartShopping,
   faCircleCheck,
+  faEnvelope,
+  faMobileScreenButton,
   faUpRightFromSquare,
 } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  Button,
-  Col,
-  Empty,
-  Image,
-  InputNumber,
-  Modal,
-  Row,
-  Space,
-  Table,
-  UploadFile,
-  notification,
-} from 'antd';
+import GrowUpItem from '@/components/Contents/ProductInfo/GrowUpItem';
+import Paragraph from 'antd/es/typography/Paragraph';
+import CommentItem from '@/components/Contents/ProductInfo/CommentItem';
 import { ColumnsType } from 'antd/es/table';
-import { UploadChangeParam } from 'antd/es/upload';
-import {
-  CategoryScale,
-  Chart as ChartJS,
-  Legend,
-  LineElement,
-  LinearScale,
-  PointElement,
-  Title,
-  Tooltip,
-} from 'chart.js';
-import moment from 'moment';
-import Link from 'next/link';
-import React, { useState } from 'react';
-import { Line } from 'react-chartjs-2';
-import useSWR, { useSWRConfig } from 'swr';
+import { CheckoutForm } from '@/components/Contents/common/CheckoutForm';
+import instanceAxios from '@/api/instanceAxios';
+import GrowUpForm from '@/components/Contents/ProductInfo/GrowUpForm';
+import TextAreaCustom from '@/components/Contents/common/InputCustom/TextAreaCustom';
+import InputCustom from '@/components/Contents/common/InputCustom/InputCustom';
+import { useAppDispatch, useAppSelector } from '@/hooks';
 import { useEffectOnce } from 'usehooks-ts';
-import ChainItem from './components/ChainItem';
+import CommentInput from '@/components/Contents/common/CommentInput';
+import moment from 'moment';
+import { useTranslations } from 'next-intl';
+import CreateDescriptionForm from '@/components/Contents/ProductInfo/CreateDescriptionForm';
+import { UploadChangeParam } from 'antd/es/upload';
+import useSWR, { useSWRConfig } from 'swr';
+import InputNumberCustom from '@/components/Contents/common/InputCustom/InputNumberCustom';
+import { Chart } from '@/components/CMS/Statistical/Chart';
+import { Line } from 'react-chartjs-2';
+import Link from 'next/link';
+import Owner from './components/Owner';
 import ProductOrigin from './components/PoductOrigin';
+import currency from '@/services/currency';
+import Description from '@/components/Contents/ProductInfo/Description';
+import useLogin from '@/services/requireLogin';
+import ChainItem from './components/ChainItem';
+import { faFacebookMessenger } from '@fortawesome/free-brands-svg-icons';
+import { openMessage } from '@/reducers/openMessageSilce';
 
 export default function MarketInfo({
   params,
@@ -78,11 +128,13 @@ export default function MarketInfo({
   const [dataListTransaction, setDataListTransaction] = useState<
     TransactionType[]
   >([]);
+  const [listOwner, setLIstOwner] = useState<OwnerProductType>();
   const [buyQuantity, setBuyQuantity] = useState(0);
   const [loadingPage, setLoadingPage] = useState(true);
   const [changePageRight, setChangePageRight] = useState('COMMENT');
   const [generalAndProvider, setGeneralAndProvider] = useState('GENERAL');
   const [isOwner, setIsOwner] = useState(false);
+  const [selectedProductMessage, setSelectedProductMessage] = useState('');
   const [selectedDescription, setSelectedDescription] = useState(0);
   const [commentList, setCommentList] = useState<CommentItemType[]>([]);
   const [showModalPay, setShowModalPay] = useState(false);
@@ -92,7 +144,7 @@ export default function MarketInfo({
   const { mutate } = useSWRConfig();
   const { login } = useLogin();
   const dispatch = useAppDispatch();
-  console.log('list transaction:', dataListTransaction);
+  console.log('list listOwner:', listOwner);
 
   ChartJS.register(
     CategoryScale,
@@ -147,6 +199,16 @@ export default function MarketInfo({
       },
     ],
   };
+  const fetchlistOwner = async (product_id: string) => {
+    await instanceAxios
+      .get(`product/${product_id}/manufacturer_history`)
+      .then(async (res) => {
+        setLIstOwner(res.data.data);
+      })
+      .catch(async (err) => {
+        console.log(err);
+      });
+  };
 
   const fethMarket = async () => {
     await instanceAxios
@@ -166,7 +228,7 @@ export default function MarketInfo({
             setDataProduct(res.data.data);
           })
           .catch((err) => console.log('asdadasd'));
-
+        fetchlistOwner(res.data.data.order_id);
         await instanceAxios
           .get(`product/${res.data.data.order_id}/history`)
           .then((res) => {
@@ -311,6 +373,7 @@ export default function MarketInfo({
   ) => {
     setCountPrice(classifyGoods);
     setTypeId(typeId);
+    setSelectedProductMessage(`Bạn vừa chọn loại sản phẩm ${typeId}`);
   };
 
   const columns: ColumnsType<TransactionType> = [
@@ -431,6 +494,11 @@ export default function MarketInfo({
                       dataProduct.classify_goods?.map((item) =>
                         Object.entries(item.data).map(([key, countPrice]) => (
                           <Button
+                            type="primary"
+                            style={{
+                              backgroundColor: '#2081e1',
+                              borderColor: '#2081e1',
+                            }}
                             key={key}
                             onClick={() => {
                               handleOnClickButtonTypeProduct(key, countPrice);
@@ -440,6 +508,11 @@ export default function MarketInfo({
                           </Button>
                         ))
                       )
+                    )}
+                    {dataProduct.product_type === 'FARMER' && (
+                      <p className="text-[red]">
+                        Vui lòng chọn loại sản phẩm !!!
+                      </p>
                     )}
                   </div>
                   <div className="p-[20px]">
@@ -620,37 +693,10 @@ export default function MarketInfo({
                       </Col>
                     </Row>
                     <ChainItem
-                      role="Chủ sở hữu"
-                      data={dataHistory as DetailHistoryType}
+                      owner={dataProduct.user?.id || ''}
+                      data={listOwner || {}}
                     />
                     {/* before user */}
-                    {dataHistory.product?.product_type === 'FARMER' && (
-                      <ChainItem
-                        role="Công ty hạt giống"
-                        data={
-                          (dataHistory.transactions_sf as DetailHistoryType) ||
-                          {}
-                        }
-                      />
-                    )}
-                    {dataHistory.product?.product_type === 'DISTRIBUTER' && (
-                      <>
-                        <ChainItem
-                          role="Công ty hạt giống"
-                          data={
-                            (dataHistory.transactions_fm as DetailHistoryType) ||
-                            {}
-                          }
-                        />
-                        <ChainItem
-                          role="Farmer"
-                          data={
-                            (dataHistory.transactions_fm as DetailHistoryType) ||
-                            {}
-                          }
-                        />
-                      </>
-                    )}
                   </div>
                 </div>
                 <div className="w-full flex gap-x-10 mt-[50px]">

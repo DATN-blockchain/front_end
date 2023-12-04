@@ -1,22 +1,38 @@
-import instanceAxios from "@/api/instanceAxios";
-import { useAppDispatch, useAppSelector } from "@/hooks";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import instanceAxios from '@/api/instanceAxios';
+import { useAppDispatch, useAppSelector } from '@/hooks';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 // import { Button, Form, Input, Space } from 'antd';
-import { Button, ConfigProvider, Form, Image, Input, InputNumber, Modal, Select, Space, notification } from "antd";
-import TextArea from "antd/es/input/TextArea";
-import useToken from "antd/es/theme/useToken";
-import Upload, { RcFile, UploadChangeParam, UploadFile, UploadProps } from "antd/es/upload";
-import { getCookie } from "cookies-next";
-import React, { useCallback, useEffect, useState } from "react";
-import { useEffectOnce } from "usehooks-ts";
-interface DataType{
-  nameType: string,
-  quantity: number,
-  price: number,
+import {
+  Button,
+  ConfigProvider,
+  Form,
+  Image,
+  Input,
+  InputNumber,
+  Modal,
+  Select,
+  Space,
+  notification,
+} from 'antd';
+import TextArea from 'antd/es/input/TextArea';
+import useToken from 'antd/es/theme/useToken';
+import Upload, {
+  RcFile,
+  UploadChangeParam,
+  UploadFile,
+  UploadProps,
+} from 'antd/es/upload';
+import { getCookie } from 'cookies-next';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useEffectOnce } from 'usehooks-ts';
+interface DataType {
+  nameType: string;
+  quantity: number;
+  price: number;
 }
-interface TypeRequest{
-  quantity: number,
-  price: number,
+interface TypeRequest {
+  quantity: number;
+  price: number;
 }
 
 interface FormType {
@@ -60,15 +76,15 @@ export default function UpdateProductForm({
   onSuccess?: () => void;
 }) {
   const [previewImage, setPreviewImage] = useState(data?.banner);
-  const [previewTitle, setPreviewTitle] = useState("");
+  const [previewTitle, setPreviewTitle] = useState('');
   const [loading, setLoading] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const currentUser = useAppSelector((state) => state.user.user);
   const [fileList, setFileList] = useState<UploadFile[]>([
     {
-      uid: "-1",
-      name: "image.png",
-      status: "done",
+      uid: '-1',
+      name: 'image.png',
+      status: 'done',
       url: data?.banner,
     },
   ]);
@@ -97,14 +113,19 @@ export default function UpdateProductForm({
 
     setPreviewImage(file.url || (file.preview as string));
     setPreviewOpen(true);
-    setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf("/") + 1));
+    setPreviewTitle(
+      file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1)
+    );
   };
 
-  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => setFileList(newFileList);
+  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
+    setFileList(newFileList);
 
-  const handleChangeAvatar: UploadProps["onChange"] = (info: UploadChangeParam<UploadFile>) => {
+  const handleChangeAvatar: UploadProps['onChange'] = (
+    info: UploadChangeParam<UploadFile>
+  ) => {
     // console.log(newFileList);
-    info.file.status = "done";
+    info.file.status = 'done';
     setFileAvartar(info.fileList);
   };
   const normFile = (e: any) => {
@@ -121,11 +142,24 @@ export default function UpdateProductForm({
   );
 
   const mapFormDataToRequest = (formData: FormType): DataRequest => {
-    const { key, name, price, quantity, description, created_at, banner, avatar, data } = formData;
-    
+    const {
+      key,
+      name,
+      price,
+      quantity,
+      description,
+      created_at,
+      banner,
+      avatar,
+      data,
+    } = formData;
+
     const newData: { [key: string]: TypeRequest } = {};
-    data.forEach((element) => {
-      newData[element.nameType] = { quantity: element.quantity, price: element.price };
+    data?.forEach((element) => {
+      newData[element.nameType] = {
+        quantity: element.quantity,
+        price: element.price,
+      };
     });
 
     const requestData: DataRequest = {
@@ -139,12 +173,13 @@ export default function UpdateProductForm({
       avatar,
       data: newData,
     };
-  
+
     return requestData;
   };
 
   const onFinish = async (e: FormType) => {
     const a = mapFormDataToRequest(e);
+    setLoading(true);
     console.log(a);
 
     await instanceAxios
@@ -152,15 +187,18 @@ export default function UpdateProductForm({
       .then((res) => {
         onSuccess?.();
         notification.success({
-          message: "Thông báo",
-          description: "Cập nhật sản phẩm thành công",
+          message: 'Thông báo',
+          description: 'Cập nhật sản phẩm thành công',
         });
       })
       .catch((err) => {
         notification.error({
-          message: "Thông báo",
-          description: "Cập nhật sản phẩm thất bại",
+          message: 'Thông báo',
+          description: 'Cập nhật sản phẩm thất bại',
         });
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
   return (
@@ -169,9 +207,9 @@ export default function UpdateProductForm({
         theme={{
           components: {
             Form: {
-              labelFontSize: 16
-            }
-          }
+              labelFontSize: 16,
+            },
+          },
         }}
       >
         <Form
@@ -186,7 +224,7 @@ export default function UpdateProductForm({
             label="Tên sản phẩm"
             name="name"
             initialValue={data?.name}
-            rules={[{ required: true, message: "Please input your name!" }]}
+            rules={[{ required: true, message: 'Please input your name!' }]}
           >
             <Input className=" h-10 text-[18px]" />
           </Form.Item>
@@ -194,7 +232,7 @@ export default function UpdateProductForm({
             label="Số lượng bán"
             name="quantity"
             initialValue={data?.quantity}
-            rules={[{ required: true, message: "Please input your quantity!" }]}
+            rules={[{ required: true, message: 'Please input your quantity!' }]}
           >
             <InputNumber min={1} className=" h-10 text-[18px]" />
           </Form.Item>
@@ -202,15 +240,17 @@ export default function UpdateProductForm({
             label="Giá bán cho từng đơn vị"
             name="price"
             initialValue={data?.price}
-            rules={[{ required: true, message: "Please input your price!" }]}
+            rules={[{ required: true, message: 'Please input your price!' }]}
           >
             <InputNumber min={1} className=" h-10 text-[18px]" />
           </Form.Item>
           <Form.Item<FormType>
             label="Mô tả sản phẩm"
             name="description"
-            initialValue={data?.description || ""}
-            rules={[{ required: true, message: "Please input your description!" }]}
+            initialValue={data?.description || ''}
+            rules={[
+              { required: true, message: 'Please input your description!' },
+            ]}
           >
             <TextArea minLength={10} className=" h-10 text-[18px]" />
           </Form.Item>
@@ -221,36 +261,65 @@ export default function UpdateProductForm({
                 {fields.map(({ key, name, ...restField }) => (
                   <Space
                     key={key}
-                    style={{ display: "flex", marginBottom: 8 }}
+                    style={{ display: 'flex', marginBottom: 8 }}
                     align="baseline"
                     className="w-full gap-2"
                   >
                     <Form.Item
                       {...restField}
-                      name={[name, "nameType"]}
-                      rules={[{ required: true, message: "Missing name of product type" }]}
+                      name={[name, 'nameType']}
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Missing name of product type',
+                        },
+                      ]}
                     >
-                      <Input placeholder="Tên loại sản phẩm" className=" h-10 text-[18px]" />
+                      <Input
+                        placeholder="Tên loại sản phẩm"
+                        className=" h-10 text-[18px]"
+                      />
                     </Form.Item>
                     <Form.Item
                       {...restField}
-                      name={[name, "quantity"]}
-                      rules={[{ required: true, message: "Missing quantity of product type" }]}
+                      name={[name, 'quantity']}
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Missing quantity of product type',
+                        },
+                      ]}
                     >
-                      <Input placeholder="Số lượng sản phẩm" className=" h-10 text-[18px]" />
+                      <Input
+                        placeholder="Số lượng sản phẩm"
+                        className=" h-10 text-[18px]"
+                      />
                     </Form.Item>
                     <Form.Item
                       {...restField}
-                      name={[name, "price"]}
-                      rules={[{ required: true, message: "Missing price of product type" }]}
+                      name={[name, 'price']}
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Missing price of product type',
+                        },
+                      ]}
                     >
-                      <Input placeholder="Giá cho từng loại" className=" h-10 text-[18px]" />
+                      <Input
+                        placeholder="Giá cho từng loại"
+                        className=" h-10 text-[18px]"
+                      />
                     </Form.Item>
                     <MinusCircleOutlined onClick={() => remove(name)} />
                   </Space>
                 ))}
                 <Form.Item>
-                  <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                  <Button
+                    type="dashed"
+                    onClick={() => add()}
+                    block
+                    icon={<PlusOutlined />}
+                  >
                     Add field
                   </Button>
                 </Form.Item>
@@ -262,9 +331,9 @@ export default function UpdateProductForm({
             //   valuePropName="banner"
             //   name={'banner'}
             getValueFromEvent={normFile}
-          //   rules={[
-          //     { required: true, message: 'Please choose your product image' },
-          //   ]}
+            //   rules={[
+            //     { required: true, message: 'Please choose your product image' },
+            //   ]}
           >
             <Upload
               accept="image/png, image/jpeg, image/jpg"
@@ -273,7 +342,7 @@ export default function UpdateProductForm({
               maxCount={1}
               action={`${process.env.NEXT_PUBLIC_API_ORIGIN}product/${productId}/banner`}
               headers={{
-                authorization: `Bearer ${getCookie("access_token")}`,
+                authorization: `Bearer ${getCookie('access_token')}`,
               }}
               listType="picture-card"
               fileList={fileList}
@@ -289,7 +358,11 @@ export default function UpdateProductForm({
             </Button>
           </Form.Item>
         </Form>
-        <Modal open={previewOpen} onCancel={() => setPreviewOpen(false)} footer={[]}>
+        <Modal
+          open={previewOpen}
+          onCancel={() => setPreviewOpen(false)}
+          footer={[]}
+        >
           <Image alt="" src={previewImage} />
         </Modal>
       </ConfigProvider>

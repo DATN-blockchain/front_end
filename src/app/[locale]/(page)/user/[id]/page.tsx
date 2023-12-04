@@ -56,7 +56,7 @@ export default function UserInfo({ params }: { params: { id: string } }) {
 
   const [nameProduct, setNameProduct] = useState('');
   const [skip, setSkip] = useState(0);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(100);
   const [dataUser, setDataUser] = useState<UserType>({});
   const [listProduct, setListProduct] = useState<ProductType[]>([]);
 

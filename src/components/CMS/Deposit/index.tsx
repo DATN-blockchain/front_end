@@ -12,7 +12,7 @@ import React, { useState } from 'react';
 
 export default function Deposit() {
   const [cost, setCost] = useState(0);
-  const [bank, setBank] = useState('SCB');
+  const [bank, setBank] = useState('VISA');
   const route = useRouter();
 
   const fetchDeposit = async () => {
@@ -30,12 +30,16 @@ export default function Deposit() {
   };
   const options = [
     {
-      label: 'SCB - Ngân hàng Sacombank',
-      value: 'SCB',
+      label: 'NCB - Ngân hàng nội địa',
+      value: 'NCB',
     },
     {
       label: 'VISA',
       value: 'VISA',
+    },
+    {
+      label: 'SCB',
+      value: 'SCB',
     },
   ];
   return (
@@ -98,7 +102,7 @@ export default function Deposit() {
                     cost === 1000000 && 'shadow-yellow-300'
                   } bg-white p-[10px] shadow-lg text-center font-bold rounded-xl`}
                 >
-                  1000.000 đ
+                  1.000.000 đ
                 </p>
               </div>
             </div>
@@ -192,7 +196,7 @@ export default function Deposit() {
           <div className="flex items-center space-x-5">
             <FontAwesomeIcon icon={faMap} />
             <p>
-              258 Lé Thanh Nghi. Phuong Hoa Cudng, Quan Håi Chåu, Thånh phö Då
+              258 Lê Thanh Nghi. Phuong Hoa Cudng, Quan Håi Chåu, Thånh phö Då
               Nång
             </p>
           </div>
