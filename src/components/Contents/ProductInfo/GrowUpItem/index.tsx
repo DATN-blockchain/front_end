@@ -51,7 +51,7 @@ export default function GrowUpItem(props: GrowUpType) {
             preview={false}
             // onClick={() => setShowListImageModal(true)}
             alt=""
-            className="object-cover rounded drop-shadow-[0_35px_35px_rgba(0,0,0,0.25)]"
+            className="object-cover  bg-white rounded drop-shadow-[0_35px_35px_rgba(0,0,0,0.25)]"
             width={300}
             height={200}
             src={props.image}

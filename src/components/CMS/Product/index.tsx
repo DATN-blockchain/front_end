@@ -126,6 +126,22 @@ export default memo(function ProductCMS() {
   useEffectOnce(() => {
     fetchListTransaction();
   });
+  const fetchCreateQRCode = async () => {
+    await instanceAxios
+      .post(`product/1/qr_code`)
+      .then((res) =>
+        notification.success({
+          message: 'Thông báo',
+          description: 'Tạo QR thành công',
+        })
+      )
+      .catch((err) =>
+        notification.warning({
+          message: 'Thông báo',
+          description: 'Sản phẩm đã được tạo mã QR',
+        })
+      );
+  };
   const fetchProductId = useCallback(() => {
     instanceAxios
       .get(`product/${currentProduct.id}`)
@@ -373,28 +389,30 @@ export default memo(function ProductCMS() {
                     // </Link>
                   ),
                 },
-                currentUser.system_role=="FARMER" ? {
-                  key: 6,
-                  label: (
-                    // <Link href={`/product/${record.id}`}>
-                    <>
-                      <Space
-                        onClick={() => {
-                          setProductId(record.id || '');
-                          setOpenModalGrowUp(true);
-                          setCurrentProduct(record);
-                        }}
-                      >
-                        <FontAwesomeIcon
-                          icon={faPenToSquare}
-                          style={{ color: '#2657ab' }}
-                        />
-                        <p>Cập nhật quá trình phát triễn của cây</p>
-                      </Space>
-                    </>
-                    // </Link>
-                  ),
-                }:null,
+                currentUser.system_role == 'FARMER'
+                  ? {
+                      key: 6,
+                      label: (
+                        // <Link href={`/product/${record.id}`}>
+                        <>
+                          <Space
+                            onClick={() => {
+                              setProductId(record.id || '');
+                              setOpenModalGrowUp(true);
+                              setCurrentProduct(record);
+                            }}
+                          >
+                            <FontAwesomeIcon
+                              icon={faPenToSquare}
+                              style={{ color: '#2657ab' }}
+                            />
+                            <p>Cập nhật quá trình phát triễn của cây</p>
+                          </Space>
+                        </>
+                        // </Link>
+                      ),
+                    }
+                  : null,
                 {
                   key: 3,
                   label: (
@@ -459,6 +477,18 @@ export default memo(function ProductCMS() {
                         <p>Xóa</p>
                       </Space>
                     </Popconfirm>
+                  ),
+                },
+                {
+                  key: 6,
+                  label: (
+                    <Space onClick={fetchCreateQRCode}>
+                      <FontAwesomeIcon
+                        icon={faCircleXmark}
+                        style={{ color: '#c01616' }}
+                      />
+                      <p>Tạo QR</p>
+                    </Space>
                   ),
                 },
               ],
@@ -599,7 +629,7 @@ export default memo(function ProductCMS() {
           centered
           onCancel={() => setOpenModalUpdate(false)}
           footer={[]}
-          width={"50%"}
+          width={'50%'}
         >
           <p className="py-[30px] text-center text-[32px] font-semibold">
             Câp nhật sản phẩm
@@ -670,24 +700,21 @@ export default memo(function ProductCMS() {
               data={currentProduct}
             />
           </Modal>
-          
-          
-
         </Modal>
         <Modal
-            open={openModalGrowUp}
-            centered
-            onCancel={() => setOpenModalGrowUp(false)}
-            footer={[]}
-          >
-            <p className="py-[30px] text-center text-[20px] font-semibold">
-              Thêm quá trình phát triễn của cây
-            </p>
-            <GrowUpForm
-              onSuccess={() => mutate(`product/${currentProduct.id}`)}
-              productId={productId}
-            />
-          </Modal>
+          open={openModalGrowUp}
+          centered
+          onCancel={() => setOpenModalGrowUp(false)}
+          footer={[]}
+        >
+          <p className="py-[30px] text-center text-[20px] font-semibold">
+            Thêm quá trình phát triễn của cây
+          </p>
+          <GrowUpForm
+            onSuccess={() => mutate(`product/${currentProduct.id}`)}
+            productId={productId}
+          />
+        </Modal>
       </div>
     </div>
   );

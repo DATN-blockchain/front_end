@@ -3,13 +3,15 @@ import staticVariables from '@/static';
 import { faUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Avatar, Col, Row, Tooltip } from 'antd';
-import React from 'react';
+import React, { memo } from 'react';
 
-export default function ChainItem({
+export default memo(function ChainItem({
   owner,
   data,
+  showEmail = true,
 }: {
   owner: string;
+  showEmail?: boolean;
   data: OwnerProductType;
 }) {
   function convertOwnerTypeToList(ownerType: OwnerProductType): UserType[] {
@@ -87,4 +89,4 @@ export default function ChainItem({
       ))}
     </>
   );
-}
+});

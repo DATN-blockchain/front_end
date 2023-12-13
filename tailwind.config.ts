@@ -17,6 +17,9 @@ const config: Config = {
         'current-color': '#2db457',
       },
     },
+    fontFamily: {
+      roboto: ['Roboto', 'sans-serif'],
+    },
   },
 
   plugins: [],

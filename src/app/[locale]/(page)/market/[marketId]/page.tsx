@@ -39,7 +39,7 @@ import {
   Modal,
   Popconfirm,
   Popover,
-  QRCode,
+  QRCode as QRCodeAntd,
   Row,
   Segmented,
   Space,
@@ -51,6 +51,7 @@ import {
   Upload,
   UploadFile,
   notification,
+  theme,
 } from 'antd';
 import {
   Chart as ChartJS,
@@ -108,7 +109,7 @@ import useLogin from '@/services/requireLogin';
 import ChainItem from './components/ChainItem';
 import { faFacebookMessenger } from '@fortawesome/free-brands-svg-icons';
 import { openMessage } from '@/reducers/openMessageSilce';
-
+const { useToken } = theme;
 export default function MarketInfo({
   params,
 }: {
@@ -134,7 +135,10 @@ export default function MarketInfo({
   const [changePageRight, setChangePageRight] = useState('COMMENT');
   const [generalAndProvider, setGeneralAndProvider] = useState('GENERAL');
   const [isOwner, setIsOwner] = useState(false);
+  const [QRCode, setQRCode] = useState('');
   const [selectedProductMessage, setSelectedProductMessage] = useState('');
+  const [visible, setVisible] = useState(false);
+
   const [selectedDescription, setSelectedDescription] = useState(0);
   const [commentList, setCommentList] = useState<CommentItemType[]>([]);
   const [showModalPay, setShowModalPay] = useState(false);
@@ -144,6 +148,9 @@ export default function MarketInfo({
   const { mutate } = useSWRConfig();
   const { login } = useLogin();
   const dispatch = useAppDispatch();
+
+  const { token } = useToken();
+
   console.log('list listOwner:', listOwner);
 
   ChartJS.register(
@@ -178,6 +185,45 @@ export default function MarketInfo({
     (item: any, index) => `Tháng ${item}`
   );
 
+  const downloadQRCodeWithPadding = (padding: number, preView?: boolean) => {
+    const originalCanvas = document
+      .getElementById('myqrcode')
+      ?.querySelector<HTMLCanvasElement>('canvas');
+
+    if (originalCanvas) {
+      const paddedCanvas = document.createElement('canvas');
+      const paddingSize = padding * 2; // Gói gọn cả hai bên
+
+      // Đặt kích thước của canvas mới
+      paddedCanvas.width = originalCanvas.width + paddingSize;
+      paddedCanvas.height = originalCanvas.height + paddingSize;
+
+      const paddedContext = paddedCanvas.getContext('2d');
+
+      if (paddedContext) {
+        // Vẽ một hình vuông trắng để tạo padding
+        paddedContext.fillStyle = '#fff'; // Màu trắng
+        paddedContext.fillRect(0, 0, paddedCanvas.width, paddedCanvas.height);
+
+        // Vẽ nội dung QR code lên canvas mới
+        paddedContext.drawImage(originalCanvas, padding, padding);
+
+        // Tạo data URL và tải về
+        const url = paddedCanvas.toDataURL();
+        if (preView) {
+          setVisible(true);
+          setQRCode(url);
+        } else {
+          const a = document.createElement('a');
+          a.download = 'QRCodeWithPadding.png';
+          a.href = url;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
+      }
+    }
+  };
   const dataChartProps = {
     labels,
     datasets: [
@@ -237,7 +283,12 @@ export default function MarketInfo({
             } else setDataHistory({ product: res.data.data });
           })
           .catch((err) => console.log('asdadasd'));
-
+        // await instanceAxios
+        //   .get(`product/${res.data.data.order_id}/qr_code`)
+        //   .then((res) => {
+        //     setQRCode(res.data.data);
+        //   })
+        //   .catch((err) => console.log('asdadasd'));
         await instanceAxios
           .get(`product/${res.data.data.order_id}/chart`)
           .then((res) => {
@@ -456,11 +507,69 @@ export default function MarketInfo({
                       icon={faFacebookMessenger}
                       style={{ color: '#005eff' }}
                     />
-                    <ShareAltOutlined />
+
+                    <ConfigProvider
+                      theme={{
+                        token: {
+                          paddingSM: 10,
+                        },
+                      }}
+                    >
+                      <TooltipAntd title={'Xem QR'}>
+                        <Popover
+                          trigger={['click']}
+                          content={
+                            <div id="myqrcode">
+                              {/* <Image alt="" src={QRCode} /> */}
+                              <QRCodeAntd
+                                className="m-auto"
+                                value={`http://localhost:3000/seek/${dataProduct.id}`}
+                                bgColor="#fff"
+                                style={{ marginBottom: 16 }}
+                              />
+                              <div className="flex gap-x-5">
+                                <button
+                                  className="block bg-[#2081e1] text-white font-semibold m-auto border rounded-xl py-[5px] px-[10px]"
+                                  onClick={() => downloadQRCodeWithPadding(10)}
+                                >
+                                  Download
+                                </button>
+                                <button
+                                  className="block bg-[#2081e1] text-white font-semibold m-auto border rounded-xl py-[5px] px-[10px]"
+                                  onClick={() =>
+                                    downloadQRCodeWithPadding(10, true)
+                                  }
+                                >
+                                  Phóng to
+                                </button>
+                              </div>
+                            </div>
+                          }
+                        >
+                          <ShareAltOutlined />
+                        </Popover>
+                      </TooltipAntd>
+                    </ConfigProvider>
+
                     <EllipsisOutlined />
                     {/* <FontAwesomeIcon icon={faFacebookMessenger} className='text-  ' /> */}
                   </div>
                 </div>
+                <Image
+                  alt=""
+                  width={200}
+                  style={{ display: 'none' }}
+                  // src={QRCode}
+
+                  preview={{
+                    visible,
+                    src: QRCode,
+
+                    onVisibleChange: (value) => {
+                      setVisible(value);
+                    },
+                  }}
+                />
                 <div className="flex w-full gap-x-2 tetx-[16px] text-[#7B7B7B] font-light">
                   Chủ sản phẩm
                   <Link
