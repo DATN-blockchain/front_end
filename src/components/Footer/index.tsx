@@ -240,7 +240,7 @@ export default memo(function Footer() {
       </div>
       {logged && (
         <FloatButton
-          badge={{ count: 2 }}
+          badge={{ count: dataMessage.length }}
           shape="square"
           type="primary"
           onClick={() => setOpenDrawer(true)}

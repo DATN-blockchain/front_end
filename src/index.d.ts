@@ -24,9 +24,9 @@ interface UserType {
 }
 
 interface OwnerProductType {
-  manufacturer? : UserType;
-  farmer? : UserType;
-  seedling_company? : UserType;
+  manufacturer?: UserType;
+  farmer?: UserType;
+  seedling_company?: UserType;
 }
 interface HistoryType {
   id?: string;
@@ -163,7 +163,7 @@ interface CartItemType {
   };
 }
 
-interface ClassifyGoods{
+interface ClassifyGoods {
   id: string;
   product_id: string;
   data: {
@@ -178,6 +178,18 @@ interface ClassifyGoodsData {
 interface CountPrice {
   quantity?: number;
   price?: number;
+}
+
+interface ChainType {
+  manufacturer?: UserType & {
+    product_id?: string;
+  };
+  farmer?: UserType & {
+    product_id?: string;
+  };
+  seedling_company?: UserType & {
+    product_id?: string;
+  };
 }
 
 interface ProductType {
@@ -242,6 +254,16 @@ interface StatisticalSystemType {
   statistical_transaction_fm?: {
     total_transaction_fm?: number;
   };
+}
+
+interface SimpleGrowUpType {
+  description?: string;
+  id?: string;
+  product_farmer_id?: string;
+  image?: string;
+  video?: string;
+  tx_hash?: string;
+  created_at?: string;
 }
 
 interface GrowUpType {
